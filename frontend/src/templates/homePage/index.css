@@ -5,14 +5,11 @@ section.content
     width: 75vw;
     height: 400px;
     box-sizing: border-box;
-
-    /* border: 1px solid black; */
 }
 section.content .campoPesquisa > input
 {
     border: none;
     border-bottom: 1px solid black;
-    outline: none;
     width: 100%;
     padding: 12px 0 0 12px;
 }
@@ -20,13 +17,6 @@ section.content .campoPesquisa > input:hover
 {
     background: #FAFAFA;
 }
-section.content .campoPesquisa:active > input
-{
-    color: #458662;
-    background: #EDFFF5;
-    border-bottom: 2px solid #458662;
-}
-
 section.content .campoPesquisa i
 {
     color: #707070;
@@ -34,10 +24,17 @@ section.content .campoPesquisa i
     top: 93px;
     right: 13.7vw;
 }
-section.content .campoPesquisa:active > i
+section.content .campoPesquisa > input.search-success-input
+{
+    color: #458662;
+    background: #EDFFF5;
+    border-bottom: 2px solid #458662;
+}
+section.content .campoPesquisa i > .search-success-icon
 {
     color: #458662;
 }
+
 section.content .table-users
 {
     text-align: left;
@@ -58,6 +55,7 @@ section.content .table-users tbody tr td
 }
 td.td-actions 
 {
+    font-size: 16px;
     width: 110px;
     padding: .75rem .75rem .75rem .05rem;
 }
@@ -66,6 +64,10 @@ td.td-actions > div
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+}
+td.td-actions > div > .iconAction
+{
+    cursor: pointer;
 }
 .btnCreate-and-pagination 
 {
@@ -83,7 +85,6 @@ td.td-actions > div
     color: #fff;
     border: none;
     border: 1px solid #0094B7;
-    outline: none;
     border-radius: 2px;
 }
 .btnCreate-and-pagination  button:hover

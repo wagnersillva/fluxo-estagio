@@ -33,10 +33,10 @@ function HomePage() {
     return (
         <>
             <Header userEmail="agroceara@mail.com" />
-            <section className="content">
-                <div className="campoPesquisa">
-                    <input type="text" placeholder="Buscar empresa" />
-                    <i><FaSearch /></i>
+            <section className="content"> 
+                <div className="campoPesquisa ">
+                    <input type="text" placeholder="Buscar empresa" id="inputSearch" />
+                    <i ><FaSearch id="iconSearch" /></i>
                 </div>
                 <div className="btnCreate-and-pagination">
                     <button className="btnCreateUser">CRIAR NOVO USUÁRIO</button>
@@ -74,23 +74,6 @@ function HomePage() {
                                 </tr>
                             )
                         })}
-                        {/* <tr>
-                            <td>1</td>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>@mdo</td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Jacob</td>
-                            <td>Thornton</td>
-                            <td>@fat</td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td colSpan="2">Larry the Bird</td>
-                            <td>@twitter</td>
-                        </tr> */}
                     </tbody>
                 </Table>
             </section>
