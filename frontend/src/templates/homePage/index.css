@@ -1,0 +1,40 @@
+section.content 
+{
+    margin: auto;
+    margin-top: 27px;
+    width: 75vw;
+    height: 400px;
+    box-sizing: border-box;
+
+    /* border: 1px solid black; */
+}
+section.content .campoPesquisa > input
+{
+    border: none;
+    border-bottom: 1px solid black;
+    outline: none;
+    width: 100%;
+    padding: 12px 0 0 12px;
+}
+section.content .campoPesquisa > input:hover
+{
+    background: #FAFAFA;
+}
+section.content .campoPesquisa:active > input
+{
+    color: #458662;
+    background: #EDFFF5;
+    border-bottom: 2px solid #458662;
+}
+
+section.content .campoPesquisa i
+{
+    color: #707070;
+    position: absolute;
+    top: 93px;
+    right: 13.7vw;
+}
+section.content .campoPesquisa:active > i
+{
+    color: #458662;
+}
