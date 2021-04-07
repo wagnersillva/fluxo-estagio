@@ -1,13 +1,7 @@
 import React from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import Router from './Router'
-function App() {
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-  return (
-    <>
-      <Router/>
-    </>
-  );
-}
+const  App = () =>  <Router/>
 
 export default App;

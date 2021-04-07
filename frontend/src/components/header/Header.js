@@ -4,7 +4,6 @@ import './index.css';
 import imageLogo from '../../img/logo.PNG'
 
 function Header(props){
-
     return(
         <header>
             <nav>
@@ -13,7 +12,7 @@ function Header(props){
                 </div>
                 <div className="header-details">
                     <p className="header-userEmail">{props.userEmail}</p>
-                    <button className="header-btn-logout">SAIR</button>
+                    <button className="header-btn-logout" onClick={props.methodLogout}>SAIR</button>
                 </div>
             </nav>
         </header>

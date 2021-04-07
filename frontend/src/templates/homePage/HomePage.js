@@ -1,11 +1,16 @@
-import React from 'react'
-import "./index.css"
+import React, {useState} from 'react'
+
 import Header from '../../components/header/Header'
 import Table from 'react-bootstrap/Table'
 import { FaSearch, FaUserEdit, FaEye, FaTimes } from "react-icons/fa"
+import {firebaseConfig} from '../../config/firebase/Firebase'
+
+import "./index.css"
 
 function HomePage() {
-    
+
+    const [userEmail] = useState(localStorage.getItem('userEmail'));
+
     const users = [
         {
             nome: 'nome completo', 
@@ -30,9 +35,25 @@ function HomePage() {
         },
     ]
 
+    const Logout = () => {
+        firebaseConfig.auth().signOut().then(() => {
+            localStorage.removeItem('userEmail')
+            localStorage.removeItem('userCredentials')
+            localStorage.removeItem('userToken')
+            window.location.reload()
+        }).catch((error) => {
+            console.log(error)
+        });
+    }
+
+
+
     return (
         <>
-            <Header userEmail="agroceara@mail.com" />
+            <Header 
+                userEmail={userEmail} 
+                methodLogout={Logout}
+            />
             <section className="content"> 
                 <div className="campoPesquisa ">
                     <input type="text" placeholder="Buscar empresa" id="inputSearch" />
