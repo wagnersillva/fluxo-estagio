@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
-
 import Header from '../../components/header/Header'
 import Table from 'react-bootstrap/Table'
+import ModalCreateUser from '../../components/modals/modalCreateUser/ModalCreateUser'
 import { FaSearch, FaUserEdit, FaEye, FaTimes } from "react-icons/fa"
 import {firebaseConfig} from '../../config/firebase/Firebase'
 
@@ -11,7 +11,13 @@ function HomePage() {
 
     const [userEmail] = useState(localStorage.getItem('userEmail'));
 
-    const users = [
+    const [show, setShow] = useState(false);
+    const handleCloseModalCreateUser = () => setShow(false);
+    const handleShowModalCreateUser = () => setShow(true);
+
+
+
+        const users = [
         {
             nome: 'nome completo', 
             cpf: '00.000.000/0001-00', 
@@ -46,8 +52,6 @@ function HomePage() {
         });
     }
 
-
-
     return (
         <>
             <Header 
@@ -60,7 +64,9 @@ function HomePage() {
                     <i ><FaSearch id="iconSearch" /></i>
                 </div>
                 <div className="btnCreate-and-pagination">
-                    <button className="btnCreateUser">CRIAR NOVO USUÁRIO</button>
+                    <button className="btnCreateUser" onClick={handleShowModalCreateUser}>
+                        CRIAR NOVO USUÁRIO
+                    </button>
                     <div className="table-pagination">
                     pagination 
                     </div>
@@ -98,6 +104,12 @@ function HomePage() {
                     </tbody>
                 </Table>
             </section>
+
+            <ModalCreateUser 
+                show={show} 
+                onHide={()=> setShow(false)} 
+                handleClose={()=>handleCloseModalCreateUser()}
+            />
         </>
     )
 }
