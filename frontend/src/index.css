@@ -15,4 +15,101 @@ code {
 input, button
 {
   outline: none;
+  transition-duration: .3s;
+}
+input:hover input:focus,
+input:focus,
+input:active,
+input:not(:placeholder-shown)
+{
+  background-color: #EDFFF5;
+  border-bottom: 2px solid #458662;
+  color: #458662;
+}
+
+input:focus+i,
+input:active+i,
+input:not(:placeholder-shown)+i
+{
+  color: #458662;
+}
+
+input
+{
+  border: none;
+  border-bottom: 1px solid black;
+  width: 100%;
+  padding: 12px 0 0 12px;
+}
+input[type="checkbox"], input[type="radio"]
+{
+  width: 15%;
+}
+
+input:hover:placeholder-shown:not(:focus)
+{
+  background: #FAFAFA;
+}
+
+button 
+{
+  padding: 4px 30px;
+}
+
+.icon 
+{
+  cursor: pointer;
+}
+
+.success 
+{
+  border: 1px solid #00B76A;
+  background: #00B76A ;
+  color: #FFF;
+  border-radius: 3px;
+}
+.success:hover
+{
+  background: #00A560 ;
+  box-shadow: 0px 3px 6px #00000029;
+  border-color: #00A560;
+}
+.cancel
+{
+  border: 1px solid #00B76A;
+  background: #FFF ;
+  color: #00B76A;
+  border-radius: 3px;
+}
+.cancel:hover
+{
+    background: #CEFFEA ;
+    color: #00A560;
+    border-color:#00A560;
+}
+.primary
+{
+  border: 1px solid #0094B7;
+  background: #0094B7;
+  color: #fff;
+  border-radius: 3px;
+}
+.primary:hover
+{
+  background: #0079A5;
+  color: #fff;
+  box-shadow: 0px 3px 6px #00000029;
+  border: 1px solid #0079A5;
+}
+
+.group-Submit-Cancel 
+{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+.group-Submit-Cancel .cancel
+{
+  margin-right: 30px;
 }

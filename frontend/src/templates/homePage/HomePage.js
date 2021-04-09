@@ -2,73 +2,47 @@ import React, {useState} from 'react'
 import Header from '../../components/header/Header'
 import Table from 'react-bootstrap/Table'
 import ModalCreateUser from '../../components/modals/modalCreateUser/ModalCreateUser'
+import ModalDeleteUser from '../../components/modals/ModalDeleteUser/ModalDeleteUser'
 import { FaSearch, FaUserEdit, FaEye, FaTimes } from "react-icons/fa"
-import {firebaseConfig} from '../../config/firebase/Firebase'
+import {Logout} from './Logout'
 
 import "./index.css"
+import Button from '../../components/buttons/Button/Button'
 
 function HomePage() {
 
     const [userEmail] = useState(localStorage.getItem('userEmail'));
-
-    const [show, setShow] = useState(false);
-    const handleCloseModalCreateUser = () => setShow(false);
-    const handleShowModalCreateUser = () => setShow(true);
-
-
+    const [{modalCreate, modalDelete, modalView, modalUpdate}, setShow] = useState(false);
+    const [userData, setUserData] = useState('')
+    const handleCloseModal = (fn) => fn;
+    const handleShowModal = (fn) => fn;
+    const fnDeleteUser = (param) => alert(`excluindo ${param}`)
 
         const users = [
-        {
-            nome: 'nome completo', 
-            cpf: '00.000.000/0001-00', 
-            email: 'email@exemplo.com',
-            telefone: '(85) 0 0000-0000',
-            modulos: "A",
-        },
-        {
-            nome: 'nome completo mais completo', 
-            cpf: '000.000.000-00', 
-            email: 'emailemailemailemailemail',
-            telefone: '(85) 0 0000-0000',
-            modulos: "A-B",
-        },
-        {
-            nome: 'nome completo', 
-            cpf: '000.000.000-00', 
-            email: 'email@exemplo.com',
-            telefone: '(85) 0 0000-0000',
-            modulos: "B",
-        },
-    ]
+            {nome: 'wagner 01',cpf: '00.000.000/0001-00',email: 'email@exemplo.com',telefone: '(85) 0 0000-0000',modulos: "A",},
+            {nome: 'wagner 02',cpf: '000.000.000-00',email: 'emailemailemailemailemail',telefone: '(85) 0 0000-0000',modulos: "A-B",},
+            {nome: 'wagner 03',cpf: '000.000.000-00',email: 'email@exemplo.com',telefone: '(85) 0 0000-0000',modulos: "B",},
+            {nome: 'wagner 04',cpf: '000.000.000-00',email: 'email@exemplo.com',telefone: '(85) 0 0000-0000',modulos: "B",},
+            {nome: 'wagner 05',cpf: '000.000.000-00',email: 'email@exemplo.com',telefone: '(85) 0 0000-0000',modulos: "B",}
+        ]
 
-    const Logout = () => {
-        firebaseConfig.auth().signOut().then(() => {
-            localStorage.removeItem('userEmail')
-            localStorage.removeItem('userCredentials')
-            localStorage.removeItem('userToken')
-            window.location.reload()
-        }).catch((error) => {
-            console.log(error)
-        });
-    }
+
 
     return (
         <>
             <Header 
                 userEmail={userEmail} 
-                methodLogout={Logout}
+                methodLogout={()=>Logout()}
             />
             <section className="content"> 
                 <div className="campoPesquisa ">
                     <input type="text" placeholder="Buscar empresa" id="inputSearch" />
-                    <i ><FaSearch id="iconSearch" /></i>
+                    <i ><FaSearch className="icon" /></i>
                 </div>
                 <div className="btnCreate-and-pagination">
-                    <button className="btnCreateUser" onClick={handleShowModalCreateUser}>
-                        CRIAR NOVO USUÁRIO
-                    </button>
+                    <Button className="primary" valueButtton="CRIAR NOVO USUÁRIO" onClick={()=>handleShowModal(setShow({modalCreate: true}))}/>
                     <div className="table-pagination">
-                    pagination 
+                        pagination 
                     </div>
                 </div>
                 <Table striped bordered className="table-users">
@@ -93,9 +67,15 @@ function HomePage() {
                                     <td>{value.modulos}</td>
                                     <td className="td-actions">
                                         <div>
-                                            <FaUserEdit className="iconAction actionUserEdit"/>
-                                            <FaEye className="iconAction actionUserView"/>
-                                            <FaTimes className="iconAction actionUserDelete"/>
+                                            <FaUserEdit className="icon actionUserEdit"/>
+                                            <FaEye className="icon actionUserView"/>
+                                            <FaTimes 
+                                                className="icon actionUserDelete"
+                                                onClick={()=>{
+                                                    handleShowModal(setShow({modalDelete: true}))
+                                                    setUserData(value.nome)
+                                                }}  
+                                            />
                                         </div>
                                     </td>
                                 </tr>
@@ -106,9 +86,24 @@ function HomePage() {
             </section>
 
             <ModalCreateUser 
-                show={show} 
-                onHide={()=> setShow(false)} 
-                handleClose={()=>handleCloseModalCreateUser()}
+                show={modalCreate} 
+                onHide={()=> handleCloseModal(setShow({modalCreate: false}))} 
+                handleClose={(e)=>{
+                    e.preventDefault()
+                    handleCloseModal(setShow({modalCreate: false}))
+                }}
+            />
+            <ModalDeleteUser
+                show={modalDelete} 
+                onHide={()=> handleCloseModal(setShow({modalDelete: false}))} 
+                handleClose={(e)=>{
+                    e.preventDefault()
+                    handleCloseModal(setShow({modalDelete: false}))
+                }}
+                handleDeleteUser={()=>{
+                    fnDeleteUser(userData)
+                }}
+                user={userData}
             />
         </>
     )

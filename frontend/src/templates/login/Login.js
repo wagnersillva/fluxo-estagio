@@ -3,6 +3,7 @@ import useForms from './components/useForms'
 import verifyDatas from './components/verifyDatas'
 import AuthenticationWhitFirebase from './components/AuthenticationWhitFirebase'
 import './index.css';
+import Button from '../../components/buttons/Button/Button';
 
 function Login(){
 
@@ -40,8 +41,8 @@ function Login(){
                         })
 
                 }else {
-                    setClassFormEmail({classFormEmail: "input-formLogin-Error", statusFormEmail: false});
-                    setClassFormPassword({classFormPassword: "input-formLogin-Error", statusFormPassword: false});
+                    setClassFormEmail({statusFormEmail: false});
+                    setClassFormPassword({statusFormPassword: false});
                }
             })
     }
@@ -49,20 +50,21 @@ function Login(){
     return (
             <div className="telaLogin">
                 <h3>Acesse sua conta</h3>
-                <form onSubmit={handleSubmit(verifications)}>
+                <form >
                     <>
                         {!statusFormEmail && (
                             <span id="messageErrorEmail">Endereço de e-mail inválido!</span>
                         )}
                     </>
-                    <input onChange={handleChange} type="text" className={classFormEmail} name="email" id="email" placeholder="E-mail"/>
+                    <input onChange={handleChange} type="text"  name="email" id="email" placeholder="E-mail"/>
                     <>
                         {!statusFormPassword && (
                             <span id="messageErrorPassword">Senha inválida!</span>
                         )}
                     </>
-                    <input onChange={handleChange} type="password" className={classFormPassword} name="password" id="password" placeholder="Senha"/>
-                    <input type="submit" value="ENTRAR" />
+                    <input onChange={handleChange} type="password"  name="password" id="password" placeholder="Senha"/>
+                    <Button type="submit" onClick={handleSubmit(verifications)} className="success" valueButtton="ENTRAR"/>
+                    {/* <input type="submit" value="ENTRAR" /> */}
                 </form>
             </div>
     )

@@ -1,9 +1,10 @@
 import React from 'react'
 import Modal from 'react-bootstrap/Modal'
-import './index.css'
+import GroupButton from '../../buttons/GroupButton/GroupButton'
+import './index.css';
 
 export default function ModalCreateUser(props) {
-    return (
+    return(
         <Modal
             id="modalCreateUser"
             show={props.show}
@@ -53,14 +54,14 @@ export default function ModalCreateUser(props) {
                         <div>
                             <input type="checkbox" name="agricultura" value="Agricultura" />
                             <p>Agricultura</p>
-                            <input type="checkbox" name="aecuaria" value="Pecuária" />
+                            <input type="checkbox" name="aecuaria" value="Pecuária"/>
                             <p>Pecuária</p>
                         </div>
                     </div>
-                    <div className="cancel-submit">
-                        <input type="button" value="CANCELAR" onClick={props.handleClose}/>
-                        <input type="submit" value="ENVIAR"/>
-                    </div>
+                    <GroupButton 
+                        ButtonCancel={props.handleClose} ButtonSubmit={props.handleClose} 
+                        ValueButtonCancel="CANCELAR" ValueButtonSubmit="SUBMIT">
+                    </GroupButton>
                 </form>
             </Modal.Body>
         </Modal>
