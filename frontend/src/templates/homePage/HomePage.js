@@ -8,6 +8,7 @@ import {Logout} from './Logout'
 
 import "./index.css"
 import Button from '../../components/buttons/Button/Button'
+import TableUser from '../../components/Table/TableUser'
 
 function HomePage() {
 
@@ -19,11 +20,11 @@ function HomePage() {
     const fnDeleteUser = (param) => alert(`excluindo ${param}`)
 
         const users = [
-            {nome: 'wagner 01',cpf: '00.000.000/0001-00',email: 'email@exemplo.com',telefone: '(85) 0 0000-0000',modulos: "A",},
-            {nome: 'wagner 02',cpf: '000.000.000-00',email: 'emailemailemailemailemail',telefone: '(85) 0 0000-0000',modulos: "A-B",},
-            {nome: 'wagner 03',cpf: '000.000.000-00',email: 'email@exemplo.com',telefone: '(85) 0 0000-0000',modulos: "B",},
-            {nome: 'wagner 04',cpf: '000.000.000-00',email: 'email@exemplo.com',telefone: '(85) 0 0000-0000',modulos: "B",},
-            {nome: 'wagner 05',cpf: '000.000.000-00',email: 'email@exemplo.com',telefone: '(85) 0 0000-0000',modulos: "B",}
+            {nome: 'wagner 01',uid: '10.000.000/0001-00',email: 'email@exemplo.com',telefone: '(85) 0 0000-0000',modulos: "A",},
+            {nome: 'wagner 02',uid: '200.000.000-00',email: 'emailemailemailemailemail',telefone: '(85) 0 0000-0000',modulos: "A-B",},
+            {nome: 'wagner 03',uid: '300.000.000-00',email: 'email@exemplo.com',telefone: '(85) 0 0000-0000',modulos: "B",},
+            {nome: 'wagner 04',uid: '050.000.000-00',email: 'email@exemplo.com',telefone: '(85) 0 0000-0000',modulos: "B",},
+            {nome: 'wagner 05',uid: '009.000.000-00',email: 'email@exemplo.com',telefone: '(85) 0 0000-0000',modulos: "B",}
         ]
 
 
@@ -46,42 +47,7 @@ function HomePage() {
                     </div>
                 </div>
                 <Table striped bordered className="table-users">
-                    <thead>
-                        <tr>
-                            <th>NOME</th>
-                            <th>CPF/CNPJ</th>
-                            <th>E-MAIL</th>
-                            <th>TELEFONE</th>
-                            <th>MÓDULOS</th>
-                            <th>AÇÕES</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {users.map((value, index)=>{
-                            return(
-                                <tr key={index}>
-                                    <td>{value.nome}</td>
-                                    <td>{value.cpf}</td>
-                                    <td>{value.email}</td>
-                                    <td>{value.telefone}</td>
-                                    <td>{value.modulos}</td>
-                                    <td className="td-actions">
-                                        <div>
-                                            <FaUserEdit className="icon actionUserEdit"/>
-                                            <FaEye className="icon actionUserView"/>
-                                            <FaTimes 
-                                                className="icon actionUserDelete"
-                                                onClick={()=>{
-                                                    handleShowModal(setShow({modalDelete: true}))
-                                                    setUserData(value.nome)
-                                                }}  
-                                            />
-                                        </div>
-                                    </td>
-                                </tr>
-                            )
-                        })}
-                    </tbody>
+                    <TableUser  data={users} dataKey="uid"/>
                 </Table>
             </section>
 

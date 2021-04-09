@@ -9,9 +9,9 @@ export default function useForm() {
         setValues(cloneValues);
     }
 
-    const handleSubmit = (callback) => (event) => {
+    const handleSubmit = (data, callback) => (event) => {
         event.preventDefault();
-        callback();
+        callback(data)
     }
 
 
