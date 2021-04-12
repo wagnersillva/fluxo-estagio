@@ -1,7 +1,11 @@
+.modal-open
+{
+    height: 100vh;
+}
 div #modalCreateUser 
 {
-    max-width: 100vw;
-    width: 650px;
+    max-width: 650px;
+    min-width: 450px;
 }
 div #modalCreateUser.modal-dialog .modal-content
 {
@@ -11,6 +15,21 @@ form
 {
     width: 85%;
     margin: auto;
+}
+form input 
+{
+    margin-right: 30px;
+}
+form input[type='radio'],form input[type='checkbox']
+{
+    margin: 0 10px;
+}
+.form-group 
+{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    margin: 35px 0;
 }
 .title-createUser 
 {
@@ -23,11 +42,18 @@ form
 {
     display: flex;
     flex-direction: row;
+    align-items: baseline;
+    margin-top: 15px;
 }
-.form-group 
+.last-checkbox 
+{
+    margin: 40px 0;
+    padding: 20px 0px;
+    border-bottom: 1px solid #EFEFEF;
+    border-top: 1px solid #EFEFEF;
+}
+.last-checkbox div
 {
     display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    margin: 35px 0;
+    align-items: baseline;
 }

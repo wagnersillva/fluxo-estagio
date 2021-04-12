@@ -7,6 +7,10 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+#root
+{
+  height: 100vh;
+}
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
@@ -43,7 +47,8 @@ input
 }
 input[type="checkbox"], input[type="radio"]
 {
-  width: 15%;
+  min-width:15px;
+  width: 10%;
 }
 
 input:hover:placeholder-shown:not(:focus)
@@ -55,7 +60,9 @@ button
 {
   padding: 4px 30px;
 }
-
+p{
+  white-space: nowrap;
+}
 .icon 
 {
   cursor: pointer;
@@ -112,4 +119,11 @@ button
 .group-Submit-Cancel .cancel
 {
   margin-right: 30px;
+}
+.form-group 
+{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    margin: 35px 0;
 }
