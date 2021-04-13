@@ -43,7 +43,6 @@ form input[type='radio'],form input[type='checkbox']
     display: flex;
     flex-direction: row;
     align-items: baseline;
-    margin-top: 15px;
 }
 .last-checkbox 
 {

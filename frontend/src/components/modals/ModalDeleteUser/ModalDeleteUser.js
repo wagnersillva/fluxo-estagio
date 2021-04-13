@@ -1,22 +1,25 @@
-import React from 'react'
+import React, {useState} from 'react'
 import Modal from 'react-bootstrap/Modal'
 import GroupButton from '../../buttons/GroupButton/GroupButton'
 import './index.css';
 
 export default function ModalDeleteUser (props) {
+
+
+
     return(
         <Modal
             id="modalDeleteUser"
             show={props.show}
             onHide={props.onHide}
         >
-            <Modal.Header>
+            <Modal.Header closeButton>
                 <Modal.Title>
                    <h2 className="title-modalDelete">Confirme a exclusão</h2>
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <h3 className="body-modalDelete">Deseja realmente excluir o usuário {props.user}?</h3>
+                <h3 className="body-modalDelete">Deseja realmente excluir o usuário {props.data.nome}?</h3>
             </Modal.Body>
             <Modal.Footer>
                 <GroupButton 

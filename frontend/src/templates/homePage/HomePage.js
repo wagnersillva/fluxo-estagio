@@ -1,33 +1,68 @@
-import React, {useState} from 'react'
-import Header from '../../components/header/Header'
-import Table from 'react-bootstrap/Table'
-import ModalCreateUser from '../../components/modals/modalCreateUser/ModalCreateUser'
-import ModalDeleteUser from '../../components/modals/ModalDeleteUser/ModalDeleteUser'
-import { FaSearch, FaUserEdit, FaEye, FaTimes } from "react-icons/fa"
-import {Logout} from './Logout'
-
+import React, {useState, useEffect} from 'react'
 import "./index.css"
-import Button from '../../components/buttons/Button/Button'
+import {Logout} from './Logout'
+import Table from 'react-bootstrap/Table'
+import Header from '../../components/header/Header'
 import RowTable from '../../components/Table/RowTable'
+import Button from '../../components/buttons/Button/Button'
+import { FaSearch, FaUserEdit, FaEye, FaTimes } from "react-icons/fa"
+import ModalViewUser from '../../components/modals/ModalViewUser/ModalViewUser'
+import ModalDeleteUser from '../../components/modals/ModalDeleteUser/ModalDeleteUser'
+import ModalCreateUser from '../../components/modals/ModalCreateUser/ModalCreateUser'
 
 function HomePage() {
 
+    
+    const [userData, setUserData] = useState({})
+    const [usersPreview,setUserPreview] = useState([]);
     const [userEmail] = useState(localStorage.getItem('userEmail'));
     const [{modalCreate, modalDelete, modalView, modalUpdate}, setShow] = useState(false);
-    const [userData, setUserData] = useState('')
-    const handleCloseModal = (fn) => fn;
+
+    const fnDeleteUser = (param) => console.log(`excluindo ${param}`)
     const handleShowModal = (fn) => fn;
-    const fnDeleteUser = (param) => alert(`excluindo ${param}`)
+    const handleCloseModal = (fn) => fn;
 
     const users = [
-        {nome: 'wagner 01',cnpj: '10.000.000/0001-00',email: 'email4@exemplo.com',telefone: '(85) 0 0000-0000',modulos: "A",},
-        {nome: 'wagner 02',cpf: '200.000.000-00',email: 'emailemailemailemailemail',telefone: '(85) 0 0000-0000',modulos: "A-B",},
-        {nome: 'wagner 03',cpf: '300.000.000-00',email: 'email8@exemplo.com',telefone: '(85) 0 0000-0000',modulos: "B",},
-        {nome: 'wagner 04',cpf: '050.000.000-00',email: 'email7@exemplo.com',telefone: '(85) 0 0000-0000',modulos: "B",},
-        {nome: 'wagner 05',cpf: '009.000.000-00',email: 'email6@exemplo.com',telefone: '(85) 0 0000-0000',modulos: "B",}
+        {
+           id:1 , nome: 'wagner alves',documento: '10.000.000/0001-00',email: 'email4@exemplo.com',
+            telefone: '(85) 0 0000-0000',modulos: "A", localizacao: {uf: "CEARA",bairro:"Algum bairro", cidade:"fortaleza",cep:"13213516",  rua: "rua A", numero: 123}
+        },
+        {
+            id:2, nome: 'joao souza',documento: '10.200.000/0001-00',email: 'jalberto@exemplo.com',
+            telefone: '(85) 0 0000-0000',modulos: "A", localizacao: {uf: "CEARA",bairro:"Algum bairro", cidade:"fortaleza",cep:"13213516",  rua: "rua A", numero: 123} 
+        },
+        {
+            id:3, nome: 'lucas andre',documento: '15.000.000/0001-00',email: 'souza@exemplo.com',
+            telefone: '(85) 0 0000-0000',modulos: "A - P", localizacao: {uf: "CEARA",bairro:"Algum bairro", cidade:"fortaleza",cep:"13213516", rua: "rua A", numero: 123} 
+        },
+        {
+            id:4, nome: 'abraão', sobrenome: ' almeida',documento: '050.000.000-00',email: 'almeida@exemplo.com',
+            telefone: '(85) 0 0000-0000',modulos: "A", localizacao: {uf: "CEARA",bairro:"Algum bairro", cidade:"fortaleza",cep:"13213516",  rua: "rua A", numero: 123} 
+        },
+        {
+            id:5, nome: 'carlos', sobrenome: ' algusto',documento: '009.000.000-00',email: 'algusto@exemplo.com',
+            telefone: '(85) 0 0000-0000',modulos: "P", localizacao: {uf: "CEARA",bairro:"Algum bairro", cidade:"fortaleza",cep:"13213516",  rua: "rua A", numero: 123} 
+        },
     ]
-
-
+    
+    window.addEventListener('load', ()=>{
+        const preview = []
+        users.forEach(user => {
+            if(user.sobrenome){
+                user.nome = `${user.nome} ${user.sobrenome}`
+            }
+            const data = {
+                nome: user.nome,
+                documento: user.documento,
+                email: user.email,
+                telefone: user.telefone,
+                modulos: user.modulos
+            }
+            preview.push(data)
+        })
+        setUserPreview(preview);
+    })
+    
 
     return (
         <>
@@ -41,7 +76,7 @@ function HomePage() {
                     <i ><FaSearch className="icon" /></i>
                 </div>
                 <div className="btnCreate-and-pagination">
-                    <Button className="primary" valueButtton="CRIAR NOVO USUÁRIO" onClick={()=>handleShowModal(setShow({modalCreate: true}))}/>
+                    <Button className="primary" valueButtton="CRIAR NOVO USUÁRIO" onClick={()=>{handleShowModal(setShow({modalCreate: true}))}}/>
                     <div className="table-pagination">
                         pagination 
                     </div>
@@ -53,7 +88,7 @@ function HomePage() {
                         </tr>
                     </thead>
                     <tbody>
-                        {users.map((value, index)=>{
+                        {usersPreview.map((value, index)=>{
                             return(
                                 <tr key={index}>
                                     <RowTable dataKey={'email'} data={value}/>
@@ -62,14 +97,18 @@ function HomePage() {
                                             <FaUserEdit className="icon actionUserEdit" 
 
                                             />
-                                            <FaEye className="icon actionUserView" 
-                                            
-                                            />
+                                            <FaEye 
+                                                className="icon actionUserView" 
+                                                onClick={() => {
+                                                    handleShowModal(setShow({ modalView: true }))
+                                                    setUserData(users[index])
+                                                }}
+                                            />  
                                             <FaTimes
                                                 className="icon actionUserDelete"
                                                 onClick={() => {
                                                     handleShowModal(setShow({ modalDelete: true }))
-                                                    setUserData(value.nome)
+                                                    setUserData(users[index])
                                                 }}
                                             />
                                         </div>
@@ -90,6 +129,17 @@ function HomePage() {
                 }}
             />
 
+            <ModalCreateUser 
+                show={modalUpdate} 
+                onHide={()=> handleCloseModal(setShow({modalUpdate: false}))} 
+                handleClose={(e)=>{
+                    e.preventDefault()
+                    handleCloseModal(setShow({modalUpdate: false}))
+                    console.log(e)
+                }}
+                data={userData}
+            />
+
             <ModalDeleteUser
                 show={modalDelete} 
                 onHide={()=> handleCloseModal(setShow({modalDelete: false}))} 
@@ -100,7 +150,20 @@ function HomePage() {
                 handleDeleteUser={()=>{
                     fnDeleteUser(userData)
                 }}
-                user={userData}
+                data={userData}
+            />
+            <ModalViewUser
+                show={modalView} 
+                onHide={()=> handleCloseModal(setShow({modalView: false}))} 
+                handleClose={(e)=>{
+                    e.preventDefault()
+                    handleCloseModal(setShow({modalView: false}))
+                }}
+                handleDelete={(e)=>{
+                    e.preventDefault()
+                    handleCloseModal(setShow({modalDelete: true}))
+                }}
+                data={userData}
             />
 
         </>

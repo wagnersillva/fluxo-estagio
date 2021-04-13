@@ -10,6 +10,7 @@
 #root
 {
   height: 100vh;
+  color: #707070;
 }
 
 code {
@@ -54,6 +55,14 @@ input[type="checkbox"], input[type="radio"]
 input:hover:placeholder-shown:not(:focus)
 {
   background: #FAFAFA;
+}
+input[type=number]::-webkit-inner-spin-button { 
+  -webkit-appearance: none;
+}
+input[type=number] { 
+ -moz-appearance: textfield;
+ appearance: textfield;
+
 }
 
 button 

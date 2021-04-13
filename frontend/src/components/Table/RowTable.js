@@ -28,7 +28,7 @@ export default class RowTable extends Component {
                     {value.map((value, index) => {
                         return (
                             <>
-                                <td key={index}>{value.toUpperCase()}</td>
+                                <td key={index}>{value.toUpperCase()} </td>
                             </>
                         )
                     })}      
@@ -39,7 +39,7 @@ export default class RowTable extends Component {
 
     render() {
         return (
-            <>
+            <>  
                 {this.RenderColumnTable(this.props.data)}
             </>
         )

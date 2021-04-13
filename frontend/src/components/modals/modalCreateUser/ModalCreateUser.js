@@ -3,7 +3,10 @@ import Modal from 'react-bootstrap/Modal'
 import GroupButton from '../../buttons/GroupButton/GroupButton'
 import useForms from '../../../functions/useForms/useForms'
 import './index.css';
-import CreateUser from '../../forms/CreateUser';
+import InputMask from "react-input-mask";
+
+// import CreateUser from '../../forms/CreateUser';
+
 
 export default function ModalCreateUser(props) {
 
@@ -20,7 +23,7 @@ export default function ModalCreateUser(props) {
             delete p.sobrenome;
             delete p.cpf;
         }
-        alert(p)
+        console.log(p)
     }
 
 
@@ -47,16 +50,16 @@ export default function ModalCreateUser(props) {
                     {!typeChecked ? (
                         <>
                         <div className={classFormGroup}>
-                            <input type="text" onChange={handleChange} required placeholder="Nome" name="nome" />
+                            <input type="text" onChange={handleChange} required placeholder="Nome" name="nome" value={''} />
                             <input type="text" onChange={handleChange} placeholder="Sobrenome" name="sobrenome" />
                         </div>
                         <div className={classFormGroup}>
-                            <input type="text" onChange={handleChange} placeholder="Telefone" name="telefone"/>
-                            <input type="text" onChange={handleChange} placeholder="E-mail" name="email"/>
+                            <InputMask mask="(99) 99999-9999" placeholder={"telefone"} name={"telefone"} onChange={handleChange}/>
+                            <input type="email" onChange={handleChange} placeholder="E-mail" name="email"/>
                         </div>
                         <div className={classFormGroup}>
-                            <input type="text" onChange={handleChange} placeholder="CPF" name="cpf"/>
-                            <input type="text" onChange={handleChange} placeholder="Data de Nascimento" name="dataDeNascimento"/>
+                            <InputMask mask="999.999.999-99" placeholder={"CPF"} name={"cpf"} onChange={handleChange}/>
+                            <InputMask mask="99/99/9999" placeholder={"Data de Nascimento"} name={"dataDeNascimento"} onChange={handleChange}/>
                         </div>
                         </>
                     ) : (
@@ -65,12 +68,12 @@ export default function ModalCreateUser(props) {
                             <input type="text" onChange={handleChange} placeholder="Razão Social" name="razaoSocial" />
                         </div>
                         <div className="form-group">
-                            <input type="text" onChange={handleChange} placeholder="CNPJ" name="cnpj"/>
+                            <InputMask mask="99.999.999/9999-99" placeholder={"CNPJ"} name={"cnpj"} onChange={handleChange}/>
                             <input type="text" onChange={handleChange} placeholder="Nome fantasia" name="nomeFantasia"/>
                         </div>
                         <div className="form-group">
-                            <input type="text" onChange={handleChange} placeholder="Telefone" name="cnpj"/>
-                            <input type="text" onChange={handleChange} placeholder="E-mail" name="e-mail"/>
+                        <InputMask mask="(99) 99999-9999" placeholder={"telefone"} name={"telefone"} onChange={handleChange}/>
+                            <input type="text" onChange={handleChange} required placeholder="E-mail" name="e-mail"/>
                         </div>
                         </>
                     )}
@@ -80,9 +83,9 @@ export default function ModalCreateUser(props) {
                             <input type="password" onChange={handleChange} placeholder="Confirmar senha" name="confirmacaoSenha"/>
                         </div>
                         <div className="form-group">
-                            <input type="text" onChange={handleChange} placeholder="CEP" name="cep"/>
+                            <InputMask mask="999999-99" placeholder={"CEP"} name={"cep"} onChange={handleChange}/>
                             <input type="text" onChange={handleChange} placeholder="Endereço" name="endereco"/>
-                            <input type="text" onChange={handleChange} placeholder="Número" name="numero"/>
+                            <input type="number" onChange={handleChange} placeholder="Número" name="numero"/>
                         </div>
                         <div className="form-group">
                             <input type="text" onChange={handleChange} placeholder="UF" name="uf"/>
@@ -92,10 +95,10 @@ export default function ModalCreateUser(props) {
                         <div className="last-checkbox">
                             <span>Atuação:</span>
                             <div>
-                                <input type="checkbox" id="CheckBox-agricultura" onChange={handleChange} name="agricultura" value="Agricultura" />
-                                <label htmlFor="CheckBox-agricultura" >Pessoa jurídica</label>
-                                <input type="checkbox" id="CheckBox-pecuaria" onChange={handleChange} name="pecuaria" value="Pecuária"/>
-                                <label htmlFor="CheckBox-pecuaria" >Pessoa jurídica</label>
+                                <input type="checkbox" id="CheckBox-agricultura" onChange={handleChange} name="agricultura" value="A" />
+                                <label htmlFor="CheckBox-agricultura">Agricultura</label>
+                                <input type="checkbox" id="CheckBox-pecuaria" onChange={handleChange} name="pecuaria" value="P"/>
+                                <label htmlFor="CheckBox-pecuaria">Pecuária</label>
                             </div>
                         </div>
                     </>
