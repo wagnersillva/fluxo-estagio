@@ -33,24 +33,24 @@ export default class ModalViewUser extends Component{
                <div className="detalhe-item localizacao">
                     <div>
                         <p className="detalhe-label">CEP</p>
-                        <p>{data.localizacao.cep}</p>
+                        <p>{data.cep}</p>
                     </div>
                     <div>
                         <p className="detalhe-label">CIDADE</p>
-                        <p>{data.localizacao.cidade}</p>
+                        <p>{data.cidade}</p>
                     </div>
                     <div>
                         <p className="detalhe-label">BAIRRO</p>
-                        <p>{data.localizacao.bairro}</p>
+                        <p>{data.bairro}</p>
                     </div>
                     <div >
                         <p className="detalhe-label">UF</p>
-                        <p>{data.localizacao.uf}</p>
+                        <p>{data.uf}</p>
                     </div>
                </div>
                <div className="detalhe-item">
                     <p className="detalhe-label">ENDEREÇO</p>
-                    <p>{data.localizacao.rua}, {data.localizacao.numero}</p>
+                    <p>{data.endereco}, {data.numero}</p>
                </div>
                <div className="detalhe-item">
                     <p className="detalhe-label">MÓDULOS PRETENDIDOS</p>
