@@ -62,6 +62,10 @@ td.td-actions > div
     justify-content: space-between;
     margin:16px 0;
 }
+.msg-SemUsuarios
+{
+    text-align: center;
+}
 /* .btnCreate-and-pagination  button 
 {
     width: 241px;

@@ -2,43 +2,23 @@
 {
     height: 100vh;
 }
-div #modalUpdateUser 
+div #modalCreateUser 
 {
     max-width: 650px;
     min-width: 450px;
 }
-div #modalUpdateUser.modal-dialog .modal-content
+div #modalCreateUser.modal-dialog .modal-content
 {
     border-radius: 0.7rem;
 }
-form 
-{
-    width: 85%;
-    margin: auto;
-}
-form input 
-{
-    margin-right: 30px;
-}
-form input[type='radio'],form input[type='checkbox']
-{
-    margin: 0 10px;
-}
-.form-group 
-{
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    margin: 35px 0;
-}
-.title-createUpdate 
+.title-createUser 
 {
     display: flex;
     flex-direction: row;
     padding: 25px 0px 15px 15px;
     border-bottom: 1px solid #EFEFEF;
 }
-.title-createUpdate div
+.title-createUser div
 {
     display: flex;
     flex-direction: row;
@@ -55,4 +35,10 @@ form input[type='radio'],form input[type='checkbox']
 {
     display: flex;
     align-items: baseline;
+}
+.body-modalDelete
+{
+    font-size: 18px;
+    padding: 10px 0 25px 15px;
+    color: #B1B1B1;
 }

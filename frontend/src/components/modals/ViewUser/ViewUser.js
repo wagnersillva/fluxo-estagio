@@ -1,9 +1,7 @@
 import React, { Component } from 'react'
 import './index.css'
-import Modal from 'react-bootstrap/Modal'
-import GroupButton from '../../buttons/GroupButton/GroupButton'
 
-export default class ModalViewUser extends Component{
+export default class ViewUser extends Component{
     constructor(props){
         super(props)
         this.state= {
@@ -65,23 +63,9 @@ export default class ModalViewUser extends Component{
     }
     render(){
         return(
-            <Modal
-                id="modalViewUser"
-                show={this.props.show}
-                onHide={this.props.onHide}
-            >  
-                <Modal.Header closeButton>
-                    <h2>Detalhes do usuário</h2>
-                </Modal.Header>
-                {this.props.show && this.renderUser(this.props.data)}
-                <Modal.Footer>
-                    <GroupButton
-                        ButtonCancel={this.props.handleDelete} ValueButtonCancel="EXCLUIR"
-                        ButtonSubmit={this.props.handleClose} ValueButtonSubmit="VOLTAR"
-                    />
-                </Modal.Footer>
-                
-            </Modal>
+            <>
+                {this.renderUser(this.props.data)}
+            </>
         )
     }
 }

@@ -129,10 +129,24 @@ p{
 {
   margin-right: 30px;
 }
+form 
+{
+    width: 95%;
+    margin: auto;
+}
+form input
+{
+    margin: 0 10px;
+}
 .form-group 
 {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    margin: 35px 0;
+    margin: 35px 0 0px 0px;
+}
+div.modal-footer
+{
+    border-top: none;
+    padding-bottom: 0 0 55px 20px;
 }

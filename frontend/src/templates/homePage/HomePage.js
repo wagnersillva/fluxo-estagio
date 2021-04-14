@@ -5,20 +5,16 @@ import Table from 'react-bootstrap/Table'
 import Header from '../../components/header/Header'
 import RowTable from '../../components/Table/RowTable'
 import Button from '../../components/buttons/Button/Button'
-import { FaSearch, FaUserEdit, FaEye, FaTimes } from "react-icons/fa"
-import ModalViewUser from '../../components/modals/ModalViewUser/ModalViewUser'
-import ModalDeleteUser from '../../components/modals/ModalDeleteUser/ModalDeleteUser'
-import ModalCreateUser from '../../components/modals/ModalCreateUser/ModalCreateUser'
-import ModalUpdateUser from '../../components/modals/ModalUpdateUser/ModalUpdateUser'
+import { FaSearch, FaUserEdit, FaEye, FaTimes, } from "react-icons/fa"
+import CreateUser from '../../components/modals/CreateUser/CreateUser'
 
 function HomePage() {
 
     
-    const [userData, setUserData] = useState({})
+    const [{userData, userDataView, userDataDelete}, setDataModal] = useState({})
     const [usersPreview,setUserPreview] = useState([]);
     const [userEmail] = useState(localStorage.getItem('userEmail'));
-    const [{modalCreate, modalDelete, modalView, modalUpdate}, setShow] = useState(false);
-    const fnDeleteUser = (param) => console.log(`excluindo ${param}`)
+    const [{show}, setShow] = useState(false);
     const handleShowModal = (fn) => fn;
     const handleCloseModal = (fn) => fn;
 
@@ -77,7 +73,7 @@ function HomePage() {
                     <i ><FaSearch className="icon" /></i>
                 </div>
                 <div className="btnCreate-and-pagination">
-                    <Button className="primary" valueButtton="CRIAR NOVO USUÁRIO" onClick={(e)=>{e.preventDefault();setUserData({});setShow({modalCreate: true})}}/>
+                    <Button className="primary" valueButtton="CRIAR NOVO USUÁRIO" onClick={(e)=>{e.preventDefault();setDataModal({userData: {}, userView: false});setShow({show: true})}}/>
                     <div className="table-pagination">
                         pagination 
                     </div>
@@ -95,39 +91,34 @@ function HomePage() {
                                     <RowTable dataKey={'email'} data={value}/>
                                     <td className="td-actions">
                                         <div>
-                                            <FaUserEdit className="icon actionUserEdit" onClick={(e)=>{e.preventDefault();handleShowModal(setShow({ modalCreate: true })); setUserData(users[index])}} />
-                                            <FaEye className="icon actionUserView" onClick={(e)=>{e.preventDefault();handleShowModal(setShow({ modalView: true })); setUserData(users[index])}}/>  
-                                            <FaTimes className="icon actionUserDelete" onClick={(e)=>{e.preventDefault();handleShowModal(setShow({ modalDelete: true })); setUserData(users[index])}}/>
+                                            <FaUserEdit className="icon actionUserEdit" 
+                                                onClick={(e)=>{e.preventDefault();handleShowModal(setShow({ show: true })); setDataModal({userData: users[index], userDataView: false, userDataDelete: false})}} />
+                                            <FaEye className="icon actionUserView" 
+                                                onClick={(e)=>{e.preventDefault();handleShowModal(setShow({ show: true })); setDataModal({userData: users[index], userDataView: true, userDataDelete: false})}}/>  
+                                            <FaTimes className="icon actionUserDelete" 
+                                                onClick={(e)=>{e.preventDefault(); handleShowModal(setShow({ show: true })); setDataModal({userData: users[index], userDataView: false, userDataDelete: true})}}/>
                                         </div>
                                     </td>
                                 </tr>
-                            )})}
+                        )})}
                     </tbody>
                 </Table>
+                    { !usersPreview.length ? 
+                        <div >
+                            <p className="msg-SemUsuarios">Não há usuários cadastrados</p>
+                        </div>
+                    :<></>}
             </section>
 
-            <ModalCreateUser 
-                show={modalCreate} 
-                onHide={()=> {handleCloseModal(setShow({modalCreate: false}))}}
-                handleClose={(e)=>{ e.preventDefault(); handleCloseModal(setShow({modalCreate: false}));}}
+            <CreateUser 
+                show={show} 
+                onHide={()=> {handleCloseModal(setShow({show: false})); setDataModal({userData: {}})}}
+                handleClose={(e)=>{ e.preventDefault(); handleCloseModal(setShow({show: false})); setDataModal({userData: {}})}}
+                handleDelete={(e)=>{e.preventDefault(); handleShowModal(setShow({ show: true })); console.log(userData)}}
+                userDataDelete={userDataDelete}
+                userDataView={userDataView}
                 data={userData}
             />
-
-            <ModalDeleteUser
-                show={modalDelete} 
-                onHide={()=> handleCloseModal(setShow({modalDelete: false}))} 
-                handleClose={(e)=>{ e.preventDefault(); handleCloseModal(setShow({modalDelete: false}))}}
-                handleDeleteUser={()=>{fnDeleteUser(userData)}}
-                data={userData}
-            />
-            <ModalViewUser
-                show={modalView} 
-                onHide={()=> handleCloseModal(setShow({modalView: false}))} 
-                handleClose={(e)=>{e.preventDefault(); handleCloseModal(setShow({modalView: false}))}}
-                handleDelete={(e)=>{e.preventDefault(); handleCloseModal(setShow({modalDelete: true}))}}
-                data={userData}
-            />
-
         </>
     )
 }

@@ -3,16 +3,19 @@ import Modal from 'react-bootstrap/Modal'
 import GroupButton from '../../buttons/GroupButton/GroupButton'
 import './index.css';
 import InputMask from "react-input-mask";
+import ViewUser from '../ViewUser/ViewUser'
 
 
-export default class ModalCreateUser extends Component {
+export default class CreateUser extends Component {
     constructor(props){
         super(props)
         this.state = {
             data: [],
             typeChecked: "Pessoa física",
             typeModuloAgricultura: '',
-            typeModuloPecuaria: ''
+            typeModuloPecuaria: '',
+            deteleUser: false
+
         }
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleChange = this.handleChange.bind(this)
@@ -26,10 +29,12 @@ export default class ModalCreateUser extends Component {
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (this.props.data !== prevProps.data) {
             this.setState({data: this.props.data})
-            if(this.props.data.pessoa !== undefined){
-                this.setTypeChecked(this.props.data.pessoa)
-                this.setModulos(this.props.data.modulos)
-            }
+            if(this.props.userDataView === false){
+                if(this.props.data.pessoa !== undefined){
+                    this.setTypeChecked(this.props.data.pessoa)
+                    this.setModulos(this.props.data.modulos)
+                }
+            } 
         }
       }
 
@@ -90,6 +95,10 @@ export default class ModalCreateUser extends Component {
     }
 
     test(p){
+        // console.log(p.modulos +" | | "+this.state.typeModuloAgricultura+" | | "+this.state.typeModuloPecuaria)
+        if(this.state.typeModuloAgricultura ==="A" && this.state.typeModuloPecuaria==="P"){ p.modulos = "A - P"}
+        if(this.state.typeModuloAgricultura ==="" && this.state.typeModuloPecuaria==="P"){ p.modulos = "P"}
+        if(this.state.typeModuloAgricultura ==="A" && this.state.typeModuloPecuaria===""){ p.modulos = "A"}
         if(p.pessoa === undefined ){ p.pessoa = "Pessoa física"}
         if(p.pessoa === "Pessoa física"){
             delete p.nomeFantasia;
@@ -98,11 +107,11 @@ export default class ModalCreateUser extends Component {
             delete p.sobrenome;
             delete p.cpf;
         }
+        delete p.agricultura;
+        delete p.pecuaria;
 
         console.log(p)
     }
-
-    
 
     renderModaalCreateUser(data) {
         return(
@@ -180,6 +189,10 @@ export default class ModalCreateUser extends Component {
         )
     }
 
+    DeleteUser(data){
+        alert(`Excluinto usuário de nome ${this.state.data.nome}`)
+    }
+
 
     render(){
         // this.test2(this.props.data.id)
@@ -189,23 +202,36 @@ export default class ModalCreateUser extends Component {
                 show={this.props.show}
                 onHide={this.props.onHide}
             >
-                 <Modal.Title>
-                   {this.props.deleteUser ? (<h2 className="title-modalDelete">Confirme a exclusão</h2>) : null}
-                </Modal.Title>
+                 <Modal.Header closeButton>
+                   {this.props.userDataDelete ? (<h2 className="title-modalDelete">Confirme a exclusão</h2>) : null}
+                   {this.props.userDataView ? (<h2>Detalhes do usuário</h2>) : null}
+                </Modal.Header>
                 <Modal.Body>
-                    {!this.props.deleteUser ? (
+                    {!this.props.userDataView && !this.props.userDataDelete ? (
                         this.renderModaalCreateUser(this.state.data)
-                    ):(
+                    ):(null)}
+                    {this.props.userDataDelete || this.state.deteleUser ?  (
                         <>
-                            <h3 className="body-modalDelete">Deseja realmente excluir o usuário {this.props.data.nome}?</h3>
+                            <h3 className="body-modalDelete">Deseja realmente excluir o usuário? {this.state.data.nome}</h3>
                         </>
-                    )}
-                        <GroupButton 
-                                ButtonCancel={this.props.handleClose}  
-                                ButtonSubmit={!this.props.deleteUser ? this.handleSubmit(this.state.data, this.test) : null} 
-                                ValueButtonCancel="CANCELAR" ValueButtonSubmit="SUBMIT">
-                        </GroupButton>
+                    ):(null)}
+                    {this.props.userDataView && !this.state.deteleUser ? (
+                        <>
+                            <ViewUser data={this.props.data}/>
+                        </>
+                    ):(null)}
                 </Modal.Body>
+                <Modal.Footer>
+                    <GroupButton
+                        ButtonCancel={this.props.userDataView && !this.state.deteleUser ? (e)=>{e.preventDefault(); this.setState({deteleUser: true})} : this.props.handleClose} 
+                        ButtonSubmit={
+                            this.props.userDataView && !this.state.deteleUser ? this.props.handleClose : 
+                            this.state.deteleUser || this.props.userDataDelete ? (e)=>{e.preventDefault();this.DeleteUser('user name')} : 
+                            this.handleSubmit(this.state.data, this.test)}
+                        ValueButtonCancel={this.props.userDataView && !this.state.deteleUser ? "EXCLUIR" : "CANCELAR"}
+                        ValueButtonSubmit={this.props.userDataView && !this.state.deteleUser ? "VOLTAR" : "CONFIRMAR"}>
+                    </GroupButton>
+                </Modal.Footer>
             </Modal>
         )
     }
