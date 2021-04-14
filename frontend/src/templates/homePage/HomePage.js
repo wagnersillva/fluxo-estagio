@@ -25,19 +25,19 @@ function HomePage() {
     // dados provisório
     const users = [
         {
-           id:1 , nome: 'wagner alves',pessoa:'Pessoa jurídica' ,documento: '10.000.000/0001-00',email: 'email4@exemplo.com', dataDeNascimento: '20/20/2000',senha: 123456,
+           id:1 , nome: 'wagner alves', nomeFantasia:"Algum nome fantasia" , pessoa:'Pessoa jurídica' ,documento: '10.000.000/0001-00',email: 'email4@exemplo.com', dataDeNascimento: '20/20/2000',senha: 123456,
             telefone: '(85) 0 0000-0000',modulos: "A", uf: "CEARA",bairro:"Algum bairro", cidade:"fortaleza",cep:"13213516",  endereco: "rua A", numero: 123
         },
         {
-            id:2, nome: 'joao souza',pessoa:'Pessoa jurídica',documento: '10.200.000/0001-00',email: 'jalberto@exemplo.com',dataDeNascimento: '20/20/2000', senha: 123456,
+            id:2, nome: 'joao souza', nomeFantasia:"Algum nome fantasia" ,pessoa:'Pessoa jurídica',documento: '10.200.000/0001-00',email: 'jalberto@exemplo.com',dataDeNascimento: '20/20/2000', senha: 123456,
             telefone: '(85) 0 0000-0000',modulos: "A", uf: "CEARA",bairro:"Algum bairro", cidade:"fortaleza",cep:"13213516",  endereco: "rua A", numero: 123 
         },
         {
-            id:3, nome: 'lucas andre',pessoa:'Pessoa jurídica',documento: '15.000.000/0001-00',email: 'souza@exemplo.com',dataDeNascimento: '20/20/2000',senha: 123456,
+            id:3, nome: 'lucas andre', nomeFantasia:"Algum nome fantasia" ,pessoa:'Pessoa jurídica',documento: '15.000.000/0001-00',email: 'souza@exemplo.com',dataDeNascimento: '20/20/2000',senha: 123456,
             telefone: '(85) 0 0000-0000',modulos: "A - P", uf: "CEARA",bairro:"Algum bairro", cidade:"fortaleza",cep:"13213516", endereco: "rua A", numero: 123 
         },
         {
-            id:4, nome: 'abraão', sobrenome: ' almeida',pessoa:'Pessoa física',documento: '050.000.000-00',email: 'almeida@exemplo.com',dataDeNascimento: '20/20/2000',senha: 123456,
+            id:4, nome: 'abraão',  sobrenome: ' almeida',pessoa:'Pessoa física',documento: '050.000.000-00',email: 'almeida@exemplo.com',dataDeNascimento: '20/20/2000',senha: 123456,
             telefone: '(85) 0 0000-0000',modulos: "A", uf: "CEARA",bairro:"Algum bairro", cidade:"fortaleza",cep:"13213516",  endereco: "rua A", numero: 123 
         },
         {
@@ -77,7 +77,7 @@ function HomePage() {
                     <i ><FaSearch className="icon" /></i>
                 </div>
                 <div className="btnCreate-and-pagination">
-                    <Button className="primary" valueButtton="CRIAR NOVO USUÁRIO" onClick={()=>{handleShowModal(setShow({modalCreate: true}))}}/>
+                    <Button className="primary" valueButtton="CRIAR NOVO USUÁRIO" onClick={(e)=>{e.preventDefault();setUserData({});setShow({modalCreate: true})}}/>
                     <div className="table-pagination">
                         pagination 
                     </div>
@@ -95,9 +95,9 @@ function HomePage() {
                                     <RowTable dataKey={'email'} data={value}/>
                                     <td className="td-actions">
                                         <div>
-                                            <FaUserEdit className="icon actionUserEdit" onClick={()=>{handleShowModal(setShow({ modalUpdate: true })); setUserData(users[index])}} />
-                                            <FaEye className="icon actionUserView" onClick={()=>{handleShowModal(setShow({ modalView: true })); setUserData(users[index])}}/>  
-                                            <FaTimes className="icon actionUserDelete" onClick={()=>{ handleShowModal(setShow({ modalDelete: true })); setUserData(users[index])}}/>
+                                            <FaUserEdit className="icon actionUserEdit" onClick={(e)=>{e.preventDefault();handleShowModal(setShow({ modalCreate: true })); setUserData(users[index])}} />
+                                            <FaEye className="icon actionUserView" onClick={(e)=>{e.preventDefault();handleShowModal(setShow({ modalView: true })); setUserData(users[index])}}/>  
+                                            <FaTimes className="icon actionUserDelete" onClick={(e)=>{e.preventDefault();handleShowModal(setShow({ modalDelete: true })); setUserData(users[index])}}/>
                                         </div>
                                     </td>
                                 </tr>
@@ -110,12 +110,6 @@ function HomePage() {
                 show={modalCreate} 
                 onHide={()=> {handleCloseModal(setShow({modalCreate: false}))}}
                 handleClose={(e)=>{ e.preventDefault(); handleCloseModal(setShow({modalCreate: false}));}}
-            />
-
-            <ModalUpdateUser
-                show={modalUpdate} 
-                onHide={()=> {handleCloseModal(setShow({modalUpdate: false})); setUserData([])}} 
-                handleClose={(e)=>{ e.preventDefault(); handleCloseModal(setShow({modalUpdate: false}))}}
                 data={userData}
             />
 

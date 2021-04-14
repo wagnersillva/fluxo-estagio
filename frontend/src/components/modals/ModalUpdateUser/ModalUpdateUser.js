@@ -17,11 +17,15 @@ export default class ModalCreateUser extends Component {
         this.test = this.test.bind(this)
     }
 
-    componentDidUpdate() {
-        if(this.props.data.pessoa !== "Pessoa física"){
-            console.log(this.props.data.pessoa)
+    // componentDidUpdate() {
+    //        console.log(this.props.data)
+    // }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.data !== prevProps.data) {
+          this.setState({data: this.props.data});
         }
-    }
+      }
 
     handleChange(event) {
         const data = { ...this.props.data }
@@ -33,6 +37,8 @@ export default class ModalCreateUser extends Component {
             data: data
         });
     }
+
+
 
 
     handleSubmit = (data, callback) => (event) => {
@@ -89,7 +95,7 @@ export default class ModalCreateUser extends Component {
                                 </div>
                                 <div>
                                     <input defaultChecked type="radio" id="radio-Pessoajuridica" onChange={this.handleChange} onClick={() => this.setTypeChecked(true)} name="pessoa" value="Pessoa jurídica" />
-                                    <label htmlFor="radio-Pessoajuridica" >Pessoa jurídica</label>
+                                    <label htmlFor="radio-Pessoajuridica">Pessoa jurídica</label>
                                 </div>
                             </>
                             )}
