@@ -203,27 +203,27 @@ export default class CreateUser extends Component {
                 onHide={this.props.onHide}
             >
                  <Modal.Header closeButton>
-                   {this.props.userDataDelete ? (<h2 className="title-modalDelete">Confirme a exclusão</h2>) : null}
-                   {this.props.userDataView ? (<h2>Detalhes do usuário</h2>) : null}
+                   {this.props.userDataDelete && (<h2 className="title-modalDelete">Confirme a exclusão</h2>)}
+                   {this.props.userDataView && (<h2>Detalhes do usuário</h2>)}
                 </Modal.Header>
                 <Modal.Body>
-                    {!this.props.userDataView && !this.props.userDataDelete ? (
+                    {!this.props.userDataView && !this.props.userDataDelete && (
                         this.renderModaalCreateUser(this.state.data)
-                    ):(null)}
-                    {this.props.userDataDelete || this.state.deteleUser ?  (
-                        <>
-                            <h3 className="body-modalDelete">Deseja realmente excluir o usuário? {this.state.data.nome}</h3>
-                        </>
-                    ):(null)}
-                    {this.props.userDataView && !this.state.deteleUser ? (
+                    )}
+                    {this.props.userDataView && !this.state.deteleUser && !this.props.userDataDelete ? (
                         <>
                             <ViewUser data={this.props.data}/>
+                        </>
+                    ):(null)}
+                    {this.props.userDataDelete  ?  (
+                        <>
+                            <h3 className="body-modalDelete">Deseja realmente excluir o usuário? {this.state.data.nome}</h3>
                         </>
                     ):(null)}
                 </Modal.Body>
                 <Modal.Footer>
                     <GroupButton
-                        ButtonCancel={this.props.userDataView && !this.state.deteleUser ? (e)=>{e.preventDefault(); this.setState({deteleUser: true})} : this.props.handleClose} 
+                        ButtonCancel={this.props.userDataView ? this.props.handleDelete : this.props.handleClose} 
                         ButtonSubmit={
                             this.props.userDataView && !this.state.deteleUser ? this.props.handleClose : 
                             this.state.deteleUser || this.props.userDataDelete ? (e)=>{e.preventDefault();this.DeleteUser('user name')} : 

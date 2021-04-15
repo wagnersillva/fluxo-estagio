@@ -103,18 +103,18 @@ function HomePage() {
                         )})}
                     </tbody>
                 </Table>
-                    { !usersPreview.length ? 
+                    { !usersPreview.length && 
                         <div >
                             <p className="msg-SemUsuarios">Não há usuários cadastrados</p>
                         </div>
-                    :<></>}
+                    }
             </section>
 
             <CreateUser 
                 show={show} 
-                onHide={()=> {handleCloseModal(setShow({show: false})); setDataModal({userData: {}})}}
-                handleClose={(e)=>{ e.preventDefault(); handleCloseModal(setShow({show: false})); setDataModal({userData: {}})}}
-                handleDelete={(e)=>{e.preventDefault(); handleShowModal(setShow({ show: true })); console.log(userData)}}
+                onHide={()=> {handleCloseModal(setShow({show: false})); setDataModal({userData: {}, userDataView: false, userDataDelete: false })}}
+                handleClose={(e)=>{ e.preventDefault(); handleCloseModal(setShow({show: false})); setDataModal({userData: {}, userDataView: false, userDataDelete: false})}}
+                handleDelete={(e)=>{e.preventDefault(); handleShowModal(setShow({ show: true })); setDataModal({userData: userData, userDataView: false, userDataDelete: true})}}
                 userDataDelete={userDataDelete}
                 userDataView={userDataView}
                 data={userData}
