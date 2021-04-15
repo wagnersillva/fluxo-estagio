@@ -1,6 +1,6 @@
 import React,{useState} from 'react';
 import useForms from '../../functions/useForms/useForms'
-import verifyDatas from './components/verifyDatas'
+import {verifyPassword, verifyEmail} from '../../functions/verifyDatas/verifyDatas'
 import AuthenticationWhitFirebase from './components/AuthenticationWhitFirebase'
 import SaveUserLocalStore from './components/SaveUserLocalStore'
 import './index.css';
@@ -9,7 +9,6 @@ import Button from '../../components/buttons/Button/Button';
 function Login(){
     
     const [{values}, handleChange, handleSubmit] = useForms();
-    const [verifyPassword, verifyEmail] = verifyDatas();
     const [{statusEmail, statusPassword}, setStatusVerifications ] = useState({statusEmail: true, statusPassword: true});
 
     const verifications = (data) => {

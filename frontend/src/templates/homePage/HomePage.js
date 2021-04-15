@@ -22,23 +22,23 @@ function HomePage() {
     const users = [
         {
            id:1 , nome: 'wagner alves', nomeFantasia:"Algum nome fantasia" , pessoa:'Pessoa jurídica' ,documento: '10.000.000/0001-00',email: 'email4@exemplo.com', dataDeNascimento: '20/20/2000',senha: 123456,
-            telefone: '(85) 0 0000-0000',modulos: "A", uf: "CEARA",bairro:"Algum bairro", cidade:"fortaleza",cep:"13213516",  endereco: "rua A", numero: 123
+            telefone: '(85) 0 0000-0000',modulos: "A", uf: "CEARA",bairro:"Algum bairro", cidade:"fortaleza",cep:"132135-16",  endereco: "rua A", numero: 123
         },
         {
             id:2, nome: 'joao souza', nomeFantasia:"Algum nome fantasia" ,pessoa:'Pessoa jurídica',documento: '10.200.000/0001-00',email: 'jalberto@exemplo.com',dataDeNascimento: '20/20/2000', senha: 123456,
-            telefone: '(85) 0 0000-0000',modulos: "A", uf: "CEARA",bairro:"Algum bairro", cidade:"fortaleza",cep:"13213516",  endereco: "rua A", numero: 123 
+            telefone: '(85) 0 0000-0000',modulos: "A", uf: "CEARA",bairro:"Algum bairro", cidade:"fortaleza",cep:"132135-16",  endereco: "rua A", numero: 123 
         },
         {
             id:3, nome: 'lucas andre', nomeFantasia:"Algum nome fantasia" ,pessoa:'Pessoa jurídica',documento: '15.000.000/0001-00',email: 'souza@exemplo.com',dataDeNascimento: '20/20/2000',senha: 123456,
-            telefone: '(85) 0 0000-0000',modulos: "A - P", uf: "CEARA",bairro:"Algum bairro", cidade:"fortaleza",cep:"13213516", endereco: "rua A", numero: 123 
+            telefone: '(85) 0 0000-0000',modulos: "A - P", uf: "CEARA",bairro:"Algum bairro", cidade:"fortaleza",cep:"132135-16", endereco: "rua A", numero: 123 
         },
         {
             id:4, nome: 'abraão',  sobrenome: ' almeida',pessoa:'Pessoa física',documento: '050.000.000-00',email: 'almeida@exemplo.com',dataDeNascimento: '20/20/2000',senha: 123456,
-            telefone: '(85) 0 0000-0000',modulos: "A", uf: "CEARA",bairro:"Algum bairro", cidade:"fortaleza",cep:"13213516",  endereco: "rua A", numero: 123 
+            telefone: '(85) 0 0000-0000',modulos: "A", uf: "CEARA",bairro:"Algum bairro", cidade:"fortaleza",cep:"132135-16",  endereco: "rua A", numero: 123 
         },
         {
             id:5, nome: 'carlos', sobrenome: ' algusto',pessoa:'Pessoa física',documento: '009.000.000-00',email: 'algusto@exemplo.com',dataDeNascimento: '20/20/2000',senha: 123456,
-            telefone: '(85) 0 0000-0000',modulos: "P", uf: "CEARA",bairro:"Algum bairro", cidade:"fortaleza",cep:"13213516",  endereco: "rua A", numero: 123 
+            telefone: '(85) 0 0000-0000',modulos: "P", uf: "CEARA",bairro:"Algum bairro", cidade:"fortaleza",cep:"132135-16",  endereco: "rua A", numero: 123 
         },
     ]
     
@@ -118,6 +118,7 @@ function HomePage() {
                 userDataDelete={userDataDelete}
                 userDataView={userDataView}
                 data={userData}
+                closeButton={false}
             />
         </>
     )

@@ -4,7 +4,7 @@ import GroupButton from '../../buttons/GroupButton/GroupButton'
 import './index.css';
 import InputMask from "react-input-mask";
 import ViewUser from '../ViewUser/ViewUser'
-
+import {CheckInput} from '../../../functions/verifyDatas/verifyDatas'
 
 export default class CreateUser extends Component {
     constructor(props){
@@ -14,7 +14,7 @@ export default class CreateUser extends Component {
             typeChecked: "Pessoa física",
             typeModuloAgricultura: '',
             typeModuloPecuaria: '',
-            deteleUser: false
+            deteleUser: false,
 
         }
         this.handleSubmit = this.handleSubmit.bind(this)
@@ -23,7 +23,7 @@ export default class CreateUser extends Component {
         this.setTypeModuloAgricultura = this.setTypeModuloAgricultura.bind(this)
         this.setTypeModuloPecuaria = this.setTypeModuloPecuaria.bind(this)
         this.setModulos = this.setModulos.bind(this)
-        this.test = this.test.bind(this)
+        this.verification = this.verification.bind(this)
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -94,23 +94,66 @@ export default class CreateUser extends Component {
         this.setState({typeChecked: value})
     }
 
-    test(p){
-        // console.log(p.modulos +" | | "+this.state.typeModuloAgricultura+" | | "+this.state.typeModuloPecuaria)
-        if(this.state.typeModuloAgricultura ==="A" && this.state.typeModuloPecuaria==="P"){ p.modulos = "A - P"}
-        if(this.state.typeModuloAgricultura ==="" && this.state.typeModuloPecuaria==="P"){ p.modulos = "P"}
-        if(this.state.typeModuloAgricultura ==="A" && this.state.typeModuloPecuaria===""){ p.modulos = "A"}
-        if(p.pessoa === undefined ){ p.pessoa = "Pessoa física"}
-        if(p.pessoa === "Pessoa física"){
-            delete p.nomeFantasia;
-            delete p.cnpj;
-        }else{
-            delete p.sobrenome;
-            delete p.cpf;
-        }
-        delete p.agricultura;
-        delete p.pecuaria;
 
-        console.log(p)
+    verification(data){
+        // console.log(p.modulos +" | | "+this.state.typeModuloAgricultura+" | | "+this.state.typeModuloPecuaria)
+        if(this.state.typeModuloAgricultura ==="A" && this.state.typeModuloPecuaria==="P"){ data.modulos = "A - P"}
+        if(this.state.typeModuloAgricultura ==="" && this.state.typeModuloPecuaria==="P"){ data.modulos = "P"}
+        if(this.state.typeModuloAgricultura ==="A" && this.state.typeModuloPecuaria===""){ data.modulos = "A"}
+        if(this.state.typeModuloAgricultura ==="" && this.state.typeModuloPecuaria===""){ 
+            data.modulos=""
+            this.setState({inputError:{checkbox: true}})
+        } else {
+            this.setState({inputError:{checkbox: false}})
+        }
+        
+        if(data.pessoa === undefined ){ data.pessoa = "Pessoa física"}
+        
+        if(data.pessoa === "Pessoa física"){
+            delete data.nomeFantasia;
+            if(
+                data.email && data.telefone && data.documento && data.senha && 
+                data.confirmacaoSenha && data.cep && data.endereco && data.numero &&
+                data.uf && data.cidade && data.bairro && data.modulos && data.nome &&
+                data.sobrenome && data.dataDeNascimento
+            ){
+                CheckInput(data).then(e => {
+                    if(!e.Status){
+                        alert(e.Message)
+                    }else{
+                        if(data.id){
+                            alert("Alterando usuário")
+                        }else {
+                            alert("Criando usuário")
+                        }
+                    }
+                })
+            } else{
+                alert('Preencha todos os campos!')
+            }
+        } else{
+            if(
+                data.email && data.telefone && data.documento && data.senha && 
+                data.confirmacaoSenha && data.cep && data.endereco && data.numero &&
+                data.uf && data.cidade && data.bairro && data.modulos && data.nome &&
+                data.nomeFantasia
+            ){
+                CheckInput(data).then(e => {
+                    if(!e.Status){
+                        alert(e.Message)
+                    }
+                })
+            } else{
+                alert('Preencha todos os campos!')
+                console.log(data)
+            }
+            delete data.sobrenome;
+            delete data.dataDeNascimento;
+        }
+
+
+        delete data.agricultura;
+        delete data.pecuaria;
     }
 
     renderModaalCreateUser(data) {
@@ -132,42 +175,42 @@ export default class CreateUser extends Component {
                         {this.state.typeChecked === "Pessoa física" ? (
                             <>
                             <div className={'form-group'}>
-                                <input type="text" onChange={this.handleChange} placeholder="Nome" name="nome" value={data.nome ? data.nome : ''} />
-                                <input type="text" onChange={this.handleChange} placeholder="Sobrenome" name="sobrenome" value={data.sobrenome ? data.sobrenome : ''}/>
+                                <input type="text"  onChange={this.handleChange} placeholder="Nome" name="nome" value={data.nome ? data.nome : ''} />
+                                <input type="text"  onChange={this.handleChange} placeholder="Sobrenome" name="sobrenome" value={data.sobrenome ? data.sobrenome : ''}/>
                             </div>
                             <div className={'form-group'}>
-                                <InputMask mask="(99) 99999-9999" placeholder={"telefone"} name={"telefone"} onChange={this.handleChange} value={data.telefone ? data.telefone : ''}/>
+                                <InputMask mask="(99) 9 9999-9999" placeholder={"telefone"} name={"telefone"} onChange={this.handleChange} value={data.telefone ? data.telefone : ''}/>
                                 <input type="email" onChange={this.handleChange} placeholder="E-mail" name="email" value={data.email ? data.email : ''}/>
                             </div>
                             <div className={'form-group'}>
-                                <InputMask mask="999.999.999-99" placeholder={"CPF"} name={"documento"} onChange={this.handleChange} value={data.documento ? data.documento : ''}/>
-                                <InputMask mask="99/99/9999" placeholder={"Data de Nascimento"} name={"dataDeNascimento"} onChange={this.handleChange} value={data.dataDeNascimento ? data.dataDeNascimento : ''}/>
+                                <InputMask mask="999.999.999-99"  placeholder={"CPF"} name={"documento"} onChange={this.handleChange} value={data.documento ? data.documento : ''}/>
+                                <InputMask mask="99/99/9999"  placeholder={"Data de Nascimento"} name={"dataDeNascimento"} onChange={this.handleChange} value={data.dataDeNascimento ? data.dataDeNascimento : ''}/>
                             </div>
                             </>
                         ) : (
                             <>
                             <div className="form-group">
-                                <input type="text" onChange={this.handleChange} placeholder="Razão Social" name="nome" value={data.nome ? data.nome : ''}/>
+                                <input type="text"  onChange={this.handleChange} placeholder="Razão Social" name="nome" value={data.nome ? data.nome : ''}/>
                             </div>
                             <div className="form-group">
-                                <InputMask mask="99.999.999/9999-99" placeholder={"CNPJ"} name={"documento"} onChange={this.handleChange} value={data.documento ? data.documento : ''}/>
-                                <input type="text" onChange={this.handleChange} placeholder="Nome fantasia" name="nomeFantasia" value={data.nomeFantasia ? data.nomeFantasia : ''}/>
+                                <InputMask mask="99.999.999/9999-99"  placeholder={"CNPJ"} name={"documento"} onChange={this.handleChange} value={data.documento ? data.documento : ''}/>
+                                <input type="text"  onChange={this.handleChange} placeholder="Nome fantasia" name="nomeFantasia" value={data.nomeFantasia ? data.nomeFantasia : ''}/>
                             </div>
                             <div className="form-group">
-                            <InputMask mask="(99) 99999-9999" placeholder={"telefone"} name={"telefone"} onChange={this.handleChange} value={data.telefone ? data.telefone : ''}/>
-                                <input type="text" onChange={this.handleChange} required placeholder="E-mail" name="email" value={data.email ? data.email : ''}/>
+                                <InputMask mask="(99) 99999-9999"  placeholder={"telefone"} name={"telefone"} onChange={this.handleChange} value={data.telefone ? data.telefone : ''}/>
+                                <input type="text"  onChange={this.handleChange} placeholder="E-mail" name="email" value={data.email ? data.email : ''}/>
                             </div>
                             </>
                         )}
                         <>
                             <div className="form-group">
-                                <input type="password" onChange={this.handleChange} placeholder="Senha" name="senha" value={data.senha ? data.senha : ''}/>
-                                <input type="password" onChange={this.handleChange} placeholder="Confirmar senha" name="confirmacaoSenha" value={data.senha ? data.senha : ''}/>
+                                <input type="password"  onChange={this.handleChange} placeholder="Senha" name="senha" value={data.senha ? data.senha : ''}/>
+                                <input type="password"  onChange={this.handleChange} placeholder="Confirmar senha" name="confirmacaoSenha" value={data.confirmacaoSenha ? data.confirmacaoSenha : ''}/>
                             </div>
                             <div className="form-group">
-                                <InputMask mask="999999-99" placeholder={"CEP"} name={"cep"} onChange={this.handleChange} value={data.cep ? data.cep : ''}/>
+                                <InputMask mask="999999-99"  placeholder={"CEP"} name={"cep"} onChange={this.handleChange} value={data.cep ? data.cep : ''}/>
                                 <input type="text" onChange={this.handleChange} placeholder="Endereço" name="endereco" value={data.endereco ? data.endereco : ''}/>
-                                <input type="number" onChange={this.handleChange} placeholder="Número" name="numero" value={data.numero ? data.numero : ''}/>
+                                <input type="number"  onChange={this.handleChange} placeholder="Número" name="numero" value={data.numero ? data.numero : ''}/>
                             </div>
                             <div className="form-group">
                                 <input type="text" onChange={this.handleChange} placeholder="UF" name="uf" value={data.uf ? data.uf : ''}/>
@@ -202,7 +245,7 @@ export default class CreateUser extends Component {
                 show={this.props.show}
                 onHide={this.props.onHide}
             >
-                 <Modal.Header closeButton>
+                 <Modal.Header closeButton={this.props.closeButton}>
                    {this.props.userDataDelete && (<h2 className="title-modalDelete">Confirme a exclusão</h2>)}
                    {this.props.userDataView && (<h2>Detalhes do usuário</h2>)}
                 </Modal.Header>
@@ -227,7 +270,7 @@ export default class CreateUser extends Component {
                         ButtonSubmit={
                             this.props.userDataView && !this.state.deteleUser ? this.props.handleClose : 
                             this.state.deteleUser || this.props.userDataDelete ? (e)=>{e.preventDefault();this.DeleteUser('user name')} : 
-                            this.handleSubmit(this.state.data, this.test)}
+                            this.handleSubmit(this.state.data, this.verification)}
                         ValueButtonCancel={this.props.userDataView && !this.state.deteleUser ? "EXCLUIR" : "CANCELAR"}
                         ValueButtonSubmit={this.props.userDataView && !this.state.deteleUser ? "VOLTAR" : "CONFIRMAR"}>
                     </GroupButton>
