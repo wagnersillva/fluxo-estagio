@@ -38,7 +38,7 @@ export function CheckInput(data){
             if(e.status){
                 if(data.senha === data.confirmacaoSenha){
                     if(data.senha.length >= 6) {
-                        if(data.telefone.length === 16){
+                        if(data.telefone.length === 15){
                             if(data.documento.length === 14 || data.documento.length === 18){
                                 if(data.cep.length === 9){
                                     return resolve({Status: true})

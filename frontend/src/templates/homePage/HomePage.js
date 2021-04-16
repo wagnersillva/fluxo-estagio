@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect } from 'react'
 import "./index.css"
 import {Logout} from './Logout'
 import Table from 'react-bootstrap/Table'
@@ -7,60 +7,51 @@ import RowTable from '../../components/Table/RowTable'
 import Button from '../../components/buttons/Button/Button'
 import { FaSearch, FaUserEdit, FaEye, FaTimes, } from "react-icons/fa"
 import CreateUser from '../../components/modals/CreateUser/CreateUser'
+import { getUsers } from '../../api/users/apiUsers'
+
 
 function HomePage() {
 
     
     const [{userData, userDataView, userDataDelete}, setDataModal] = useState({})
-    const [usersPreview,setUserPreview] = useState([]);
+    const [{users, usersPreview},setUsers] = useState([]);
+    const [query, setQuery] = useState('');
+    const [url, setUrl] = useState('http://localhost:3333/users')
     const [userEmail] = useState(localStorage.getItem('userEmail'));
     const [{show}, setShow] = useState(false);
     const handleShowModal = (fn) => fn;
     const handleCloseModal = (fn) => fn;
 
-    // dados provisório
-    const users = [
-        {
-           id:1 , nome: 'wagner alves', nomeFantasia:"Algum nome fantasia" , pessoa:'Pessoa jurídica' ,documento: '10.000.000/0001-00',email: 'email4@exemplo.com', dataDeNascimento: '20/20/2000',senha: 123456,
-            telefone: '(85) 0 0000-0000',modulos: "A", uf: "CEARA",bairro:"Algum bairro", cidade:"fortaleza",cep:"132135-16",  endereco: "rua A", numero: 123
-        },
-        {
-            id:2, nome: 'joao souza', nomeFantasia:"Algum nome fantasia" ,pessoa:'Pessoa jurídica',documento: '10.200.000/0001-00',email: 'jalberto@exemplo.com',dataDeNascimento: '20/20/2000', senha: 123456,
-            telefone: '(85) 0 0000-0000',modulos: "A", uf: "CEARA",bairro:"Algum bairro", cidade:"fortaleza",cep:"132135-16",  endereco: "rua A", numero: 123 
-        },
-        {
-            id:3, nome: 'lucas andre', nomeFantasia:"Algum nome fantasia" ,pessoa:'Pessoa jurídica',documento: '15.000.000/0001-00',email: 'souza@exemplo.com',dataDeNascimento: '20/20/2000',senha: 123456,
-            telefone: '(85) 0 0000-0000',modulos: "A - P", uf: "CEARA",bairro:"Algum bairro", cidade:"fortaleza",cep:"132135-16", endereco: "rua A", numero: 123 
-        },
-        {
-            id:4, nome: 'abraão',  sobrenome: ' almeida',pessoa:'Pessoa física',documento: '050.000.000-00',email: 'almeida@exemplo.com',dataDeNascimento: '20/20/2000',senha: 123456,
-            telefone: '(85) 0 0000-0000',modulos: "A", uf: "CEARA",bairro:"Algum bairro", cidade:"fortaleza",cep:"132135-16",  endereco: "rua A", numero: 123 
-        },
-        {
-            id:5, nome: 'carlos', sobrenome: ' algusto',pessoa:'Pessoa física',documento: '009.000.000-00',email: 'algusto@exemplo.com',dataDeNascimento: '20/20/2000',senha: 123456,
-            telefone: '(85) 0 0000-0000',modulos: "P", uf: "CEARA",bairro:"Algum bairro", cidade:"fortaleza",cep:"132135-16",  endereco: "rua A", numero: 123 
-        },
-    ]
-    
-    window.addEventListener('load', ()=>{
-        const preview = []
-        users.forEach(user => {
-            if(user.sobrenome){
-                user.nome = `${user.nome} ${user.sobrenome}`
+    useEffect(() =>{
+        async function fetchData(){
+            const resp = await getUsers(url).then(e =>{ return e});
+            let data = resp.data
+            let preview=[]
+            if(data.result){
+                data.result.forEach(user => {
+                    if(user.sobrenome){
+                        user.nome = `${user.nome} ${user.sobrenome}`
+                    }
+                    const data = {
+                        nome: user.nome,
+                        documento: user.documento,
+                        email: user.email,
+                        telefone: user.telefone,
+                        modulos: user.modulos
+                    }
+                    preview.push(data)
+                })
             }
-            const data = {
-                nome: user.nome,
-                documento: user.documento,
-                email: user.email,
-                telefone: user.telefone,
-                modulos: user.modulos
-            }
-            preview.push(data)
-        })
-        setUserPreview(preview);
-    })
-    
+            setUsers({users: data.result, usersPreview: preview})
+        }
+        fetchData()
+    }, [url])
 
+    const clearQuery = ()=>{
+        setUrl(`${url}`); 
+        window.location=''
+    }
+    
     return (
         <>
             <Header 
@@ -69,8 +60,8 @@ function HomePage() {
             />
             <section className="content"> 
                 <div className="campoPesquisa ">
-                    <input type="text" placeholder="Buscar empresa" id="inputSearch" />
-                    <i ><FaSearch className="icon" /></i>
+                    <input type="text" placeholder="Buscar empresa" value={query} onChange={event =>{event.preventDefault(); setQuery(event.target.value)}} id="inputSearch" />
+                    <i ><FaSearch className="icon" onClick={()=> { query ? setUrl(`${url}?query=${query}`) : clearQuery()}}/></i>
                 </div>
                 <div className="btnCreate-and-pagination">
                     <Button className="primary" valueButtton="CRIAR NOVO USUÁRIO" onClick={(e)=>{e.preventDefault();setDataModal({userData: {}, userView: false});setShow({show: true})}}/>
@@ -85,7 +76,7 @@ function HomePage() {
                         </tr>
                     </thead>
                     <tbody>
-                        {usersPreview.map((value, index)=>{
+                        {usersPreview && usersPreview.map((value, index)=>{
                             return(
                                 <tr key={index}>
                                     <RowTable dataKey={'email'} data={value}/>
@@ -103,7 +94,7 @@ function HomePage() {
                         )})}
                     </tbody>
                 </Table>
-                    { !usersPreview.length && 
+                    { !usersPreview && 
                         <div >
                             <p className="msg-SemUsuarios">Não há usuários cadastrados</p>
                         </div>

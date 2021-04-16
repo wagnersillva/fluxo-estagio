@@ -5,6 +5,8 @@ import './index.css';
 import InputMask from "react-input-mask";
 import ViewUser from '../ViewUser/ViewUser'
 import {CheckInput} from '../../../functions/verifyDatas/verifyDatas'
+import { createUser, updateUser, deleteUser } from '../../../api/users/apiUsers';
+import Swal from 'sweetalert2'
 
 export default class CreateUser extends Component {
     constructor(props){
@@ -24,6 +26,7 @@ export default class CreateUser extends Component {
         this.setTypeModuloPecuaria = this.setTypeModuloPecuaria.bind(this)
         this.setModulos = this.setModulos.bind(this)
         this.verification = this.verification.bind(this)
+        this.alertMessage = this.alertMessage.bind(this)
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -41,13 +44,19 @@ export default class CreateUser extends Component {
     handleChange(event) {
         const data = {...this.state.data}
         const target = event.target;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const value = target.type === 'checkbox' ? target.checked : 
+                    (target.name === "senha" || target.name === "confirmacaoSenha") ? target.value : target.value.toUpperCase();
         const name = target.name;
         data[name] = value
         this.setState({
             data: data
         });
     }
+
+    handleSubmit = (data, callback) => (event) => {
+        event.preventDefault()
+        callback(data)
+     }
 
     setModulos(modulo){
         switch (modulo) {
@@ -85,18 +94,63 @@ export default class CreateUser extends Component {
         }
     }
 
-    handleSubmit = (data, callback) => (event) => {
-       event.preventDefault()
-       callback(data)
-    }
-
     setTypeChecked(value){
         this.setState({typeChecked: value})
     }
 
 
+    alertMessage(value, message){
+        if(value){
+            Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: message,
+                showConfirmButton: false,
+                timer: 2000
+              })
+        }else{
+            Swal.fire({
+                position: 'top',
+                icon: 'error',
+                title: message,
+                showConfirmButton: false,
+                timer: 1500
+              })
+        }
+    }
+
+    createOrUpdate(data){
+        CheckInput(data).then(e => {
+            if(!e.Status){
+                this.alertMessage(false, e.Message)
+            }else{
+                delete data.confirmacaoSenha
+                if(data.id){
+                    alert("Alterando usuário")
+                    updateUser(data).then(res => {
+                        if(res){
+                            this.alertMessage(true, 'Usuário alterado com sucesso')
+                            setTimeout(()=> window.location = '/', 2255)
+                        }else{
+                            this.alertMessage(false, 'Houve um erro ao tentar alterar usuário!')
+                        }
+                    })
+                    console.log(data)
+                }else {
+                    createUser(data).then(res =>{
+                        if(res){
+                            this.alertMessage(true, 'Usuário cadastrado com sucesso')
+                            setTimeout(()=> window.location = '/', 2255)
+                        }else{
+                            this.alertMessage(false, 'Houve um erro ao tentar cadastrar usuário!')
+                        }
+                    })
+                }
+            }
+        })
+    }
+
     verification(data){
-        // console.log(p.modulos +" | | "+this.state.typeModuloAgricultura+" | | "+this.state.typeModuloPecuaria)
         if(this.state.typeModuloAgricultura ==="A" && this.state.typeModuloPecuaria==="P"){ data.modulos = "A - P"}
         if(this.state.typeModuloAgricultura ==="" && this.state.typeModuloPecuaria==="P"){ data.modulos = "P"}
         if(this.state.typeModuloAgricultura ==="A" && this.state.typeModuloPecuaria===""){ data.modulos = "A"}
@@ -110,26 +164,18 @@ export default class CreateUser extends Component {
         if(data.pessoa === undefined ){ data.pessoa = "Pessoa física"}
         
         if(data.pessoa === "Pessoa física"){
-            delete data.nomeFantasia;
+            data.nomeFantasia = null;
             if(
                 data.email && data.telefone && data.documento && data.senha && 
                 data.confirmacaoSenha && data.cep && data.endereco && data.numero &&
                 data.uf && data.cidade && data.bairro && data.modulos && data.nome &&
                 data.sobrenome && data.dataDeNascimento
             ){
-                CheckInput(data).then(e => {
-                    if(!e.Status){
-                        alert(e.Message)
-                    }else{
-                        if(data.id){
-                            alert("Alterando usuário")
-                        }else {
-                            alert("Criando usuário")
-                        }
-                    }
-                })
+
+                this.createOrUpdate(data);
+
             } else{
-                alert('Preencha todos os campos!')
+                this.alertMessage(false, 'Preencha todos os campos!')
             }
         } else{
             if(
@@ -138,23 +184,32 @@ export default class CreateUser extends Component {
                 data.uf && data.cidade && data.bairro && data.modulos && data.nome &&
                 data.nomeFantasia
             ){
-                CheckInput(data).then(e => {
-                    if(!e.Status){
-                        alert(e.Message)
-                    }
-                })
+                data.sobrenome = null;
+                data.dataDeNascimento = "00/00/0000";
+
+                this.createOrUpdate(data);
+
             } else{
-                alert('Preencha todos os campos!')
-                console.log(data)
+                this.alertMessage(false, 'Preencha todos os campos!')
             }
-            delete data.sobrenome;
-            delete data.dataDeNascimento;
         }
 
 
         delete data.agricultura;
         delete data.pecuaria;
     }
+
+    DeleteUser(id){
+        deleteUser(this.state.data.id).then(res=>{
+            if(res){
+                this.alertMessage(true, 'Usuário excluído com sucesso')
+                setTimeout(()=> window.location = '/', 2255)
+            }else{
+                this.alertMessage(false, 'Houve um erro ao tentar excluir o usuário!')
+            }
+        })
+    }
+    
 
     renderModaalCreateUser(data) {
         return(
@@ -179,7 +234,7 @@ export default class CreateUser extends Component {
                                 <input type="text"  onChange={this.handleChange} placeholder="Sobrenome" name="sobrenome" value={data.sobrenome ? data.sobrenome : ''}/>
                             </div>
                             <div className={'form-group'}>
-                                <InputMask mask="(99) 9 9999-9999" placeholder={"telefone"} name={"telefone"} onChange={this.handleChange} value={data.telefone ? data.telefone : ''}/>
+                                <InputMask mask="(99) 9 99999999" placeholder={"telefone"} name={"telefone"} onChange={this.handleChange} value={data.telefone ? data.telefone : ''}/>
                                 <input type="email" onChange={this.handleChange} placeholder="E-mail" name="email" value={data.email ? data.email : ''}/>
                             </div>
                             <div className={'form-group'}>
@@ -197,7 +252,7 @@ export default class CreateUser extends Component {
                                 <input type="text"  onChange={this.handleChange} placeholder="Nome fantasia" name="nomeFantasia" value={data.nomeFantasia ? data.nomeFantasia : ''}/>
                             </div>
                             <div className="form-group">
-                                <InputMask mask="(99) 99999-9999"  placeholder={"telefone"} name={"telefone"} onChange={this.handleChange} value={data.telefone ? data.telefone : ''}/>
+                                <InputMask mask="(99) 9 99999999"  placeholder={"telefone"} name={"telefone"} onChange={this.handleChange} value={data.telefone ? data.telefone : ''}/>
                                 <input type="text"  onChange={this.handleChange} placeholder="E-mail" name="email" value={data.email ? data.email : ''}/>
                             </div>
                             </>
@@ -232,11 +287,6 @@ export default class CreateUser extends Component {
         )
     }
 
-    DeleteUser(data){
-        alert(`Excluinto usuário de nome ${this.state.data.nome}`)
-    }
-
-
     render(){
         // this.test2(this.props.data.id)
         return(
@@ -260,7 +310,7 @@ export default class CreateUser extends Component {
                     ):(null)}
                     {this.props.userDataDelete  ?  (
                         <>
-                            <h3 className="body-modalDelete">Deseja realmente excluir o usuário? {this.state.data.nome}</h3>
+                            <h3 className="body-modalDelete">Deseja realmente excluir o usuário?</h3>
                         </>
                     ):(null)}
                 </Modal.Body>
@@ -269,7 +319,7 @@ export default class CreateUser extends Component {
                         ButtonCancel={this.props.userDataView ? this.props.handleDelete : this.props.handleClose} 
                         ButtonSubmit={
                             this.props.userDataView && !this.state.deteleUser ? this.props.handleClose : 
-                            this.state.deteleUser || this.props.userDataDelete ? (e)=>{e.preventDefault();this.DeleteUser('user name')} : 
+                            this.state.deteleUser || this.props.userDataDelete ? (e)=>{e.preventDefault();this.DeleteUser('95')} : 
                             this.handleSubmit(this.state.data, this.verification)}
                         ValueButtonCancel={this.props.userDataView && !this.state.deteleUser ? "EXCLUIR" : "CANCELAR"}
                         ValueButtonSubmit={this.props.userDataView && !this.state.deteleUser ? "VOLTAR" : "CONFIRMAR"}>
