@@ -5,7 +5,7 @@ import Table from 'react-bootstrap/Table'
 import Header from '../../components/header/Header'
 import RowTable from '../../components/Table/RowTable'
 import Button from '../../components/buttons/Button/Button'
-import { FaSearch, FaUserEdit, FaEye, FaTimes, } from "react-icons/fa"
+import { FaSearch, FaUserEdit, FaEye, FaTimes, FaAngleLeft, FaAngleRight} from "react-icons/fa"
 import CreateUser from '../../components/modals/CreateUser/CreateUser'
 import { getUsers } from '../../api/users/apiUsers'
 
@@ -13,22 +13,26 @@ import { getUsers } from '../../api/users/apiUsers'
 function HomePage() {
 
     
+    const [userEmail] = useState(localStorage.getItem('userEmail'));
     const [{userData, userDataView, userDataDelete}, setDataModal] = useState({})
     const [{users, usersPreview},setUsers] = useState([]);
     const [query, setQuery] = useState('');
-    const [url, setUrl] = useState('http://localhost:3333/users')
-    const [userEmail] = useState(localStorage.getItem('userEmail'));
+    const [{perPage, countPages, page},setPage] = useState({page: 2})
+    const [url, setUrl] = useState(`http://localhost:3333/pagination?page=${page}&limit=2`)
     const [{show}, setShow] = useState(false);
+
     const handleShowModal = (fn) => fn;
     const handleCloseModal = (fn) => fn;
 
     useEffect(() =>{
         async function fetchData(){
-            const resp = await getUsers(url).then(e =>{ return e});
-            let data = resp.data
+            const {data} = await getUsers(url).then(e =>{ return e});
+            let count = data.result.count ? data.result.count[0].count : null;
+            let users = data.result.count ? data.result.users : data.result;
+            console.log(data.result)
             let preview=[]
-            if(data.result){
-                data.result.forEach(user => {
+            if(users){
+                users.forEach(user => {
                     if(user.sobrenome){
                         user.nome = `${user.nome} ${user.sobrenome}`
                     }
@@ -42,13 +46,37 @@ function HomePage() {
                     preview.push(data)
                 })
             }
-            setUsers({users: data.result, usersPreview: preview})
+            setPage({countPages: count, page, perPage: 2})
+            setUsers({users: users, usersPreview: preview})
         }
         fetchData()
     }, [url])
 
+
+
+    const pagination = {
+        next(){
+            let nextPage = page+1
+            if(nextPage > Math.ceil(countPages/perPage)){
+                nextPage = page
+            }
+            setUrl(`http://localhost:3333/pagination?page=${nextPage}&limit=2`)
+            setPage({page: nextPage,countPages,perPage})
+        },
+        prev(){
+            let prevPage = page-1
+            if(prevPage <= 0){
+                prevPage = page
+            }
+            setUrl(`http://localhost:3333/pagination?page=${prevPage}&limit=2`)
+            setPage({page: prevPage,countPages,perPage})
+        }
+    }
+
+
+
     const clearQuery = ()=>{
-        setUrl(`${url}`); 
+        setUrl('http://localhost:3333/pagination?page=1&limit=1'); 
         window.location=''
     }
     
@@ -61,13 +89,23 @@ function HomePage() {
             <section className="content"> 
                 <div className="campoPesquisa ">
                     <input type="text" placeholder="Buscar empresa" value={query} onChange={event =>{event.preventDefault(); setQuery(event.target.value)}} id="inputSearch" />
-                    <i ><FaSearch className="icon" onClick={()=> { query ? setUrl(`${url}?query=${query}`) : clearQuery()}}/></i>
+                    <i ><FaSearch className="icon" onClick={()=> { query ? setUrl(`http://localhost:3333/users?query=${query}`) : clearQuery()}}/></i>
                 </div>
                 <div className="btnCreate-and-pagination">
                     <Button className="primary" valueButtton="CRIAR NOVO USUÁRIO" onClick={(e)=>{e.preventDefault();setDataModal({userData: {}, userView: false});setShow({show: true})}}/>
-                    <div className="table-pagination">
-                        pagination 
-                    </div>
+                    {countPages && 
+                        <div className="table-pagination">
+                            <span className="selectPage" onClick={()=>{pagination.prev()}} ><FaAngleLeft/></span>
+                            {!(page-1 <= 0) && 
+                                <span  className="selectPage" onClick={()=>{pagination.prev()}}>{page-1}</span>
+                            }
+                            <span className="selectPage currentPage" >{page}</span>
+                            {!(page+1 > Math.ceil(countPages/perPage)) &&
+                                <span  className="selectPage" onClick={()=>{pagination.next()}}>{page+1}</span>
+                            }
+                            <span className="selectPage" onClick={()=>{pagination.next()}}><FaAngleRight/></span>
+                        </div>
+                    }
                 </div>
                 <Table striped bordered className="table-users">
                     <thead>
