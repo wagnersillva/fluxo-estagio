@@ -46,8 +46,22 @@ function index(rowQuery) {
             }
         } catch (err) {
 
-            return reject({ status: false, error: err })
+            return reject({ status: false, error: err })    
 
+        }
+    })
+}
+
+function pagination(page, limit) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if(!page || page < 1){page = 1}
+            if(!limit){limit = 1}
+            const users = await connection(`users`).select(['users.*']).limit(limit).offset(Math.ceil((page - 1) * limit))
+            const count = await connection('users').count('id as count')
+            return resolve({ status: true, result: {users, count}})
+        } catch (err) {
+            return reject({ status: false, message: err })
         }
     })
 }
@@ -89,4 +103,4 @@ function deleteUser(id) {
 
 
 
-module.exports = { create, index, update, deleteUser };
+module.exports = { create, index, update, deleteUser, pagination };

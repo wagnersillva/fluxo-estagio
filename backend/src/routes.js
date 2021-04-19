@@ -1,7 +1,7 @@
 const express = require('express');
 // const connection = require('./database/connections');
 const routes = express.Router();
-const {create, index, update, deleteUser} = require('./controllers/usersControllers')
+const {create, index, update, deleteUser, pagination} = require('./controllers/usersControllers')
 
 routes.get('/users', (req, res) => {
   const rowQuery = req.query
@@ -12,7 +12,14 @@ routes.get('/users', (req, res) => {
   })
 })
 
-
+routes.get('/pagination', (req, res) => {
+  const {page, limit} = req.query
+  pagination(page, limit).then(success => {
+    return res.status(201).json(success);
+  }).catch(() => {
+    return res.status(400).json({messageError: "Erro inesperado ao tentar buscar usuário(s)."})
+  })
+})
 
 routes.post('/createUsers', (req, res) => {
   const data = req.body;
@@ -43,6 +50,7 @@ routes.put('/updateUsers', (req, res) => {
     endereco: req.body.endereco,
     numero: req.body.numero,
   };
+
   const {id} = req.body;
   update(data, id).then((success) => {
     return res.status(201).json(success);
