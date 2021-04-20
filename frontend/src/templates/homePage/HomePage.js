@@ -8,6 +8,7 @@ import Button from '../../components/buttons/Button/Button'
 import { FaSearch, FaUserEdit, FaEye, FaTimes, FaAngleLeft, FaAngleRight} from "react-icons/fa"
 import CreateUser from '../../components/modals/CreateUser/CreateUser'
 import { getUsers } from '../../api/users/apiUsers'
+import { RenderPagination, next, prev } from '../../components/pagination/Pagination'
 
 
 function HomePage() {
@@ -17,8 +18,8 @@ function HomePage() {
     const [{userData, userDataView, userDataDelete}, setDataModal] = useState({})
     const [{users, usersPreview},setUsers] = useState([]);
     const [query, setQuery] = useState('');
-    const [{perPage, countPages, page},setPage] = useState({page: 2})
-    const [url, setUrl] = useState(`http://localhost:3333/pagination?page=${page}&limit=2`)
+    const [{perPage, countUsers, countPages, page},setPage] = useState({page: 1, perPage: 2})
+    const [url, setUrl] = useState(`http://localhost:3333/pagination?page=${page}&limit=${perPage}`)
     const [{show}, setShow] = useState(false);
 
     const handleShowModal = (fn) => fn;
@@ -46,37 +47,15 @@ function HomePage() {
                     preview.push(data)
                 })
             }
-            setPage({countPages: count, page, perPage: 2})
+            const countPages = Math.ceil(count/perPage)
+            setPage({countUsers: count, countPages: countPages, page, perPage})
             setUsers({users: users, usersPreview: preview})
         }
         fetchData()
-    }, [url])
-
-
-
-    const pagination = {
-        next(){
-            let nextPage = page+1
-            if(nextPage > Math.ceil(countPages/perPage)){
-                nextPage = page
-            }
-            setUrl(`http://localhost:3333/pagination?page=${nextPage}&limit=2`)
-            setPage({page: nextPage,countPages,perPage})
-        },
-        prev(){
-            let prevPage = page-1
-            if(prevPage <= 0){
-                prevPage = page
-            }
-            setUrl(`http://localhost:3333/pagination?page=${prevPage}&limit=2`)
-            setPage({page: prevPage,countPages,perPage})
-        }
-    }
-
-
+    }, [url, page, perPage])
 
     const clearQuery = ()=>{
-        setUrl('http://localhost:3333/pagination?page=1&limit=1'); 
+        setUrl(`http://localhost:3333/pagination?page=1&limit=${perPage}`); 
         window.location=''
     }
     
@@ -93,18 +72,21 @@ function HomePage() {
                 </div>
                 <div className="btnCreate-and-pagination">
                     <Button className="primary" valueButtton="CRIAR NOVO USUÁRIO" onClick={(e)=>{e.preventDefault();setDataModal({userData: {}, userView: false});setShow({show: true})}}/>
-                    {countPages && 
-                        <div className="table-pagination">
-                            <span className="selectPage" onClick={()=>{pagination.prev()}} ><FaAngleLeft/></span>
-                            {!(page-1 <= 0) && 
-                                <span  className="selectPage" onClick={()=>{pagination.prev()}}>{page-1}</span>
-                            }
-                            <span className="selectPage currentPage" >{page}</span>
-                            {!(page+1 > Math.ceil(countPages/perPage)) &&
-                                <span  className="selectPage" onClick={()=>{pagination.next()}}>{page+1}</span>
-                            }
-                            <span className="selectPage" onClick={()=>{pagination.next()}}><FaAngleRight/></span>
-                        </div>
+                    {(countUsers && countPages > 1) && 
+                        <RenderPagination 
+                            countPages={countPages} perPage={perPage} page={page}
+                            prevPage={async () =>{
+                                const prevPage = await prev(page);
+                                setPage({page: prevPage,countUsers,countPages,perPage})
+                                setUrl(`http://localhost:3333/pagination?page=${prevPage}&limit=${perPage}`)
+                            }} 
+                            nextPage={async () =>{
+                                const nextPage = await next(page, countPages);
+                                setPage({page: nextPage,countUsers,countPages,perPage})
+                                setUrl(`http://localhost:3333/pagination?page=${nextPage}&limit=${perPage}`)
+                            }} 
+                            iconBack ={<FaAngleLeft/>} iconNext={<FaAngleRight/>}
+                        />
                     }
                 </div>
                 <Table striped bordered className="table-users">
